@@ -145,7 +145,6 @@ section .title::before{
     background: gold;
     color: black;
     font-size: 25px;
-    font-weight: 700px;
     padding: 8px 20px;
     margin-top: 20px;
     margin-bottom: 120px;
@@ -154,8 +153,10 @@ section .title::before{
     transition: all 0.3s ease;
 }
 .about .about-content a:hover{
-    color: white;
-    background: crimson;
+    color: blue;
+    font-weight: 500;
+    background: lightgrey;
+    transform: scale(1.05);
 }
 .about .about-content .left{
     text-align: left;
