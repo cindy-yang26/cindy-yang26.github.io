@@ -366,36 +366,36 @@ let animalGameTimer = null;
 
 // Maple Math Challenge Data - Simple arithmetic questions
 const mathProblems = [
-    { latex: "5 + 3 = ?", answer: 8, tolerance: 0.1 },
-    { latex: "12 - 7 = ?", answer: 5, tolerance: 0.1 },
-    { latex: "6 \\times 4 = ?", answer: 24, tolerance: 0.1 },
-    { latex: "15 + 8 = ?", answer: 23, tolerance: 0.1 },
-    { latex: "20 - 13 = ?", answer: 7, tolerance: 0.1 },
-    { latex: "9 \\times 7 = ?", answer: 63, tolerance: 0.1 },
-    { latex: "25 + 17 = ?", answer: 42, tolerance: 0.1 },
-    { latex: "30 - 12 = ?", answer: 18, tolerance: 0.1 },
-    { latex: "8 \\times 5 = ?", answer: 40, tolerance: 0.1 },
-    { latex: "11 + 14 = ?", answer: 25, tolerance: 0.1 },
-    { latex: "50 - 23 = ?", answer: 27, tolerance: 0.1 },
-    { latex: "7 \\times 6 = ?", answer: 42, tolerance: 0.1 },
-    { latex: "33 + 19 = ?", answer: 52, tolerance: 0.1 },
-    { latex: "45 - 18 = ?", answer: 27, tolerance: 0.1 },
-    { latex: "12 \\times 3 = ?", answer: 36, tolerance: 0.1 },
-    { latex: "22 + 16 = ?", answer: 38, tolerance: 0.1 },
-    { latex: "40 - 14 = ?", answer: 26, tolerance: 0.1 },
-    { latex: "11 \\times 8 = ?", answer: 88, tolerance: 0.1 },
-    { latex: "17 + 26 = ?", answer: 43, tolerance: 0.1 },
-    { latex: "60 - 35 = ?", answer: 25, tolerance: 0.1 },
-    { latex: "9 \\times 9 = ?", answer: 81, tolerance: 0.1 },
-    { latex: "28 + 14 = ?", answer: 42, tolerance: 0.1 },
-    { latex: "55 - 29 = ?", answer: 26, tolerance: 0.1 },
-    { latex: "10 \\times 7 = ?", answer: 70, tolerance: 0.1 },
-    { latex: "19 + 32 = ?", answer: 51, tolerance: 0.1 },
-    { latex: "72 - 48 = ?", answer: 24, tolerance: 0.1 },
-    { latex: "13 \\times 4 = ?", answer: 52, tolerance: 0.1 },
-    { latex: "41 + 23 = ?", answer: 64, tolerance: 0.1 },
-    { latex: "80 - 31 = ?", answer: 49, tolerance: 0.1 },
-    { latex: "6 \\times 11 = ?", answer: 66, tolerance: 0.1 },
+    { text: "5 + 3 = ?", answer: 8, tolerance: 0.1 },
+    { text: "12 - 7 = ?", answer: 5, tolerance: 0.1 },
+    { text: "6 × 4 = ?", answer: 24, tolerance: 0.1 },
+    { text: "15 + 8 = ?", answer: 23, tolerance: 0.1 },
+    { text: "20 - 13 = ?", answer: 7, tolerance: 0.1 },
+    { text: "9 × 7 = ?", answer: 63, tolerance: 0.1 },
+    { text: "25 + 17 = ?", answer: 42, tolerance: 0.1 },
+    { text: "30 - 12 = ?", answer: 18, tolerance: 0.1 },
+    { text: "8 × 5 = ?", answer: 40, tolerance: 0.1 },
+    { text: "11 + 14 = ?", answer: 25, tolerance: 0.1 },
+    { text: "50 - 23 = ?", answer: 27, tolerance: 0.1 },
+    { text: "7 × 6 = ?", answer: 42, tolerance: 0.1 },
+    { text: "33 + 19 = ?", answer: 52, tolerance: 0.1 },
+    { text: "45 - 18 = ?", answer: 27, tolerance: 0.1 },
+    { text: "12 × 3 = ?", answer: 36, tolerance: 0.1 },
+    { text: "22 + 16 = ?", answer: 38, tolerance: 0.1 },
+    { text: "40 - 14 = ?", answer: 26, tolerance: 0.1 },
+    { text: "11 × 8 = ?", answer: 88, tolerance: 0.1 },
+    { text: "17 + 26 = ?", answer: 43, tolerance: 0.1 },
+    { text: "60 - 35 = ?", answer: 25, tolerance: 0.1 },
+    { text: "9 × 9 = ?", answer: 81, tolerance: 0.1 },
+    { text: "28 + 14 = ?", answer: 42, tolerance: 0.1 },
+    { text: "55 - 29 = ?", answer: 26, tolerance: 0.1 },
+    { text: "10 × 7 = ?", answer: 70, tolerance: 0.1 },
+    { text: "19 + 32 = ?", answer: 51, tolerance: 0.1 },
+    { text: "72 - 48 = ?", answer: 24, tolerance: 0.1 },
+    { text: "13 × 4 = ?", answer: 52, tolerance: 0.1 },
+    { text: "41 + 23 = ?", answer: 64, tolerance: 0.1 },
+    { text: "80 - 31 = ?", answer: 49, tolerance: 0.1 },
+    { text: "6 × 11 = ?", answer: 66, tolerance: 0.1 },
 ];
 
 
@@ -625,9 +625,8 @@ function showNextMathProblem() {
     usedProblems.push(randomIndex);
     currentProblem = mathProblems[randomIndex];
     
-    // Render LaTeX
-    equationDisplay.innerHTML = `$$${currentProblem.latex}$$`;
-    MathJax.typesetPromise([equationDisplay]).catch(err => console.log(err));
+    // Display text
+    equationDisplay.textContent = currentProblem.text;
     
     mathAnswer.value = "";
     mathAnswer.focus();
