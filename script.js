@@ -364,19 +364,40 @@ let animalTimerInterval = null;
 let currentAnimal = null;
 let animalGameTimer = null;
 
-// Maple Math Challenge Data
+// Maple Math Challenge Data - Simple arithmetic questions
 const mathProblems = [
-    { latex: "\\text{If a maple tree produces } 40 \\text{ gallons of sap to make } 1 \\text{ gallon of syrup, how many gallons of syrup from } 120 \\text{ gallons?}", answer: 3, tolerance: 0.1 },
-    { latex: "\\text{Vermont produces } 800,000 \\text{ gallons of maple syrup annually. If } 25\\% \\text{ is exported, how many gallons stay in state?}", answer: 600000, tolerance: 1000 },
-    { latex: "\\text{The Long Trail is } 272 \\text{ miles. If you hike } \\frac{1}{4} \\text{ of it, how many miles?}", answer: 68, tolerance: 0.1 },
-    { latex: "\\text{A covered bridge costs } \\$50,000 \\text{ to build and lasts } 100 \\text{ years. Cost per year?}", answer: 500, tolerance: 1 },
-    { latex: "\\text{Lake Champlain is } 120 \\text{ miles long and } 12 \\text{ miles wide on average. Rough area?}", answer: 1440, tolerance: 100 },
-    { latex: "\\text{If maple syrup costs } \\$45 \\text{ per gallon and you buy } 3 \\text{ gallons, total cost?}", answer: 135, tolerance: 1 },
-    { latex: "\\text{Vermont has } 4,391 \\text{ square miles. If } 78\\% \\text{ is forested, how many square miles?}", answer: 3425, tolerance: 10 },
-    { latex: "2^3 + \\text{(number of sides on a covered bridge's roof)}", answer: 10, tolerance: 0.1 },
-    { latex: "\\text{A ski slope drops } 2,000 \\text{ feet over } 1 \\text{ mile. Slope percentage?}", answer: 37.88, tolerance: 1 },
-    { latex: "\\text{If it takes } 40 \\text{ hours to collect sap, and } 3 \\text{ workers help equally, hours per worker?}", answer: 13.33, tolerance: 0.5 }
+    { latex: "5 + 3 = ?", answer: 8, tolerance: 0.1 },
+    { latex: "12 - 7 = ?", answer: 5, tolerance: 0.1 },
+    { latex: "6 \\times 4 = ?", answer: 24, tolerance: 0.1 },
+    { latex: "15 + 8 = ?", answer: 23, tolerance: 0.1 },
+    { latex: "20 - 13 = ?", answer: 7, tolerance: 0.1 },
+    { latex: "9 \\times 7 = ?", answer: 63, tolerance: 0.1 },
+    { latex: "25 + 17 = ?", answer: 42, tolerance: 0.1 },
+    { latex: "30 - 12 = ?", answer: 18, tolerance: 0.1 },
+    { latex: "8 \\times 5 = ?", answer: 40, tolerance: 0.1 },
+    { latex: "11 + 14 = ?", answer: 25, tolerance: 0.1 },
+    { latex: "50 - 23 = ?", answer: 27, tolerance: 0.1 },
+    { latex: "7 \\times 6 = ?", answer: 42, tolerance: 0.1 },
+    { latex: "33 + 19 = ?", answer: 52, tolerance: 0.1 },
+    { latex: "45 - 18 = ?", answer: 27, tolerance: 0.1 },
+    { latex: "12 \\times 3 = ?", answer: 36, tolerance: 0.1 },
+    { latex: "22 + 16 = ?", answer: 38, tolerance: 0.1 },
+    { latex: "40 - 14 = ?", answer: 26, tolerance: 0.1 },
+    { latex: "11 \\times 8 = ?", answer: 88, tolerance: 0.1 },
+    { latex: "17 + 26 = ?", answer: 43, tolerance: 0.1 },
+    { latex: "60 - 35 = ?", answer: 25, tolerance: 0.1 },
+    { latex: "9 \\times 9 = ?", answer: 81, tolerance: 0.1 },
+    { latex: "28 + 14 = ?", answer: 42, tolerance: 0.1 },
+    { latex: "55 - 29 = ?", answer: 26, tolerance: 0.1 },
+    { latex: "10 \\times 7 = ?", answer: 70, tolerance: 0.1 },
+    { latex: "19 + 32 = ?", answer: 51, tolerance: 0.1 },
+    { latex: "72 - 48 = ?", answer: 24, tolerance: 0.1 },
+    { latex: "13 \\times 4 = ?", answer: 52, tolerance: 0.1 },
+    { latex: "41 + 23 = ?", answer: 64, tolerance: 0.1 },
+    { latex: "80 - 31 = ?", answer: 49, tolerance: 0.1 },
+    { latex: "6 \\times 11 = ?", answer: 66, tolerance: 0.1 },
 ];
+
 
 let mathGameActive = false;
 let mathCurrentScore = 0;
