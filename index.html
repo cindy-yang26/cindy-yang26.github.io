@@ -226,6 +226,39 @@
                 </div>
             </article>
 
+            <article class="panel maple-racing-panel">
+                <h3>Maple Syrup Racing</h3>
+                <p class="game-intro">Pick your maple syrup and watch them race! Who will finish first?</p>
+                <div class="maple-racing-game">
+                    <div class="race-container">
+                        <div class="race-lane" id="lane1">
+                            <div class="syrup-stream golden-stream"></div>
+                            <span class="lane-label">Golden</span>
+                        </div>
+                        <div class="race-lane" id="lane2">
+                            <div class="syrup-stream amber-stream"></div>
+                            <span class="lane-label">Amber</span>
+                        </div>
+                        <div class="race-lane" id="lane3">
+                            <div class="syrup-stream dark-stream"></div>
+                            <span class="lane-label">Dark</span>
+                        </div>
+                        <div class="race-lane" id="lane4">
+                            <div class="syrup-stream very-dark-stream"></div>
+                            <span class="lane-label">Very Dark</span>
+                        </div>
+                    </div>
+                    <div class="racing-controls">
+                        <button class="race-btn" data-lane="1" type="button">Pick Golden 🍯</button>
+                        <button class="race-btn" data-lane="2" type="button">Pick Amber 🍯</button>
+                        <button class="race-btn" data-lane="3" type="button">Pick Dark 🍯</button>
+                        <button class="race-btn" data-lane="4" type="button">Pick Very Dark 🍯</button>
+                    </div>
+                </div>
+                <div class="racing-result" id="racingResult"></div>
+                <button class="btn btn-secondary btn-small" id="resetRaceBtn" type="button">Race Again</button>
+            </article>
+
             <article class="panel fact-lab">
                 <h3>Fun Facts</h3>
                 <div class="fact-grid">

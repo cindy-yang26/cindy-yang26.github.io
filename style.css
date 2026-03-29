@@ -730,6 +730,253 @@ h3 {
     }
 }
 
+.maple-racing-panel {
+    margin-top: 1rem;
+}
+
+.maple-racing-game {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 1.2rem;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 1.5rem;
+    border-radius: 0.9rem;
+    border: 1px solid rgba(138, 51, 40, 0.2);
+}
+
+.race-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.race-lane {
+    position: relative;
+    height: 60px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.6), rgba(245, 236, 223, 0.4));
+    border: 2px solid rgba(39, 52, 41, 0.2);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.syrup-stream {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8px;
+    border-radius: 0.5rem;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 0%;
+    transition: width 0.05s linear;
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+.golden-stream {
+    background: linear-gradient(90deg, #f4d460, #f9e8a0);
+}
+
+.amber-stream {
+    background: linear-gradient(90deg, #d4a040, #e8b860);
+}
+
+.dark-stream {
+    background: linear-gradient(90deg, #8a6b3a, #a88550);
+}
+
+.very-dark-stream {
+    background: linear-gradient(90deg, #5a4a2a, #7a5a3a);
+    color: #fff;
+}
+
+.lane-label {
+    position: absolute;
+    left: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--wood-smoke);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.racing-controls {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+}
+
+.race-btn {
+    background: rgba(255, 251, 245, 0.85);
+    border: 2px solid rgba(138, 51, 40, 0.3);
+    border-radius: 0.6rem;
+    padding: 0.8rem;
+    cursor: pointer;
+    font-family: "Manrope", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--wood-smoke);
+    transition: all 0.2s ease;
+}
+
+.race-btn:hover:not(:disabled) {
+    border-color: var(--barn-red);
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(138, 51, 40, 0.15);
+    transform: translateY(-2px);
+}
+
+.race-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.racing-result {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    min-height: 30px;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.racing-result.winner {
+    color: #2d7a3a;
+    background: rgba(95, 115, 82, 0.1);
+}
+
+.racing-result.loser {
+    color: var(--barn-red);
+    background: rgba(138, 51, 40, 0.08);
+}
+
+@media (max-width: 860px) {
+    .racing-controls {
+        grid-template-columns: 1fr;
+    }
+    
+    .race-lane {
+        height: 50px;
+    }
+}
+
+.maple-syrup-panel {
+    margin-top: 1rem;
+}
+
+.maple-syrup-game {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 1.2rem;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 1.5rem;
+    border-radius: 0.9rem;
+    border: 1px solid rgba(138, 51, 40, 0.2);
+}
+
+.syrup-display {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.syrup-color {
+    width: 140px;
+    height: 200px;
+    border-radius: 0.8rem;
+    border: 3px solid rgba(47, 41, 36, 0.3);
+    box-shadow: 0 8px 24px rgba(138, 51, 40, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    transition: background-color 0.3s ease;
+}
+
+.syrup-timer {
+    text-align: center;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--barn-red);
+    font-family: "Fraunces", serif;
+    min-width: 80px;
+    padding: 1rem;
+    background: rgba(138, 51, 40, 0.08);
+    border-radius: 0.6rem;
+    border: 2px solid rgba(138, 51, 40, 0.2);
+}
+
+.syrup-timer span {
+    display: block;
+}
+
+.grade-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+}
+
+.grade-btn {
+    background: rgba(255, 251, 245, 0.85);
+    border: 2px solid rgba(138, 51, 40, 0.25);
+    border-radius: 0.6rem;
+    padding: 1rem;
+    cursor: pointer;
+    font-family: "Manrope", sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--wood-smoke);
+    transition: all 0.2s ease;
+    text-transform: capitalize;
+}
+
+.grade-btn:hover:not(:disabled) {
+    border-color: var(--barn-red);
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(138, 51, 40, 0.15);
+    transform: translateY(-2px);
+}
+
+.grade-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.maple-stats {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+    color: var(--wood-smoke);
+    font-size: 0.95rem;
+}
+
+.maple-stats span {
+    font-size: 1rem;
+}
+
+.maple-stats span span {
+    color: var(--barn-red);
+    font-weight: 700;
+}
+
+@media (max-width: 860px) {
+    .syrup-display {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .syrup-color {
+        width: 120px;
+        height: 180px;
+    }
+    
+    .grade-buttons {
+        grid-template-columns: 1fr;
+    }
+}
+
 .memory-game-panel {
     margin-top: 1rem;
 }
