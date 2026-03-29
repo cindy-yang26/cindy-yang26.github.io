@@ -39,6 +39,14 @@ const animalScore = document.getElementById("animalScore");
 const animalLives = document.getElementById("animalLives");
 const animalStreak = document.getElementById("animalStreak");
 const animalTimer = document.getElementById("animalTimer");
+const equationDisplay = document.getElementById("equationDisplay");
+const mathAnswer = document.getElementById("mathAnswer");
+const submitMathBtn = document.getElementById("submitMathBtn");
+const startMathBtn = document.getElementById("startMathBtn");
+const resetMathBtn = document.getElementById("resetMathBtn");
+const mathScore = document.getElementById("mathScore");
+const mathStreak = document.getElementById("mathStreak");
+const mathTimer = document.getElementById("mathTimer");
 const availableModes = [...new Set(Array.from(easterTargets, (el) => el.dataset.mode).filter(Boolean))];
 
 let toastTimer;
@@ -356,6 +364,27 @@ let animalTimerInterval = null;
 let currentAnimal = null;
 let animalGameTimer = null;
 
+// Maple Math Challenge Data
+const mathProblems = [
+    { latex: "\\text{If a maple tree produces } 40 \\text{ gallons of sap to make } 1 \\text{ gallon of syrup, how many gallons of syrup from } 120 \\text{ gallons?}", answer: 3, tolerance: 0.1 },
+    { latex: "\\text{Vermont produces } 800,000 \\text{ gallons of maple syrup annually. If } 25\\% \\text{ is exported, how many gallons stay in state?}", answer: 600000, tolerance: 1000 },
+    { latex: "\\text{The Long Trail is } 272 \\text{ miles. If you hike } \\frac{1}{4} \\text{ of it, how many miles?}", answer: 68, tolerance: 0.1 },
+    { latex: "\\text{A covered bridge costs } \\$50,000 \\text{ to build and lasts } 100 \\text{ years. Cost per year?}", answer: 500, tolerance: 1 },
+    { latex: "\\text{Lake Champlain is } 120 \\text{ miles long and } 12 \\text{ miles wide on average. Rough area?}", answer: 1440, tolerance: 100 },
+    { latex: "\\text{If maple syrup costs } \\$45 \\text{ per gallon and you buy } 3 \\text{ gallons, total cost?}", answer: 135, tolerance: 1 },
+    { latex: "\\text{Vermont has } 4,391 \\text{ square miles. If } 78\\% \\text{ is forested, how many square miles?}", answer: 3425, tolerance: 10 },
+    { latex: "2^3 + \\text{(number of sides on a covered bridge's roof)}", answer: 10, tolerance: 0.1 },
+    { latex: "\\text{A ski slope drops } 2,000 \\text{ feet over } 1 \\text{ mile. Slope percentage?}", answer: 37.88, tolerance: 1 },
+    { latex: "\\text{If it takes } 40 \\text{ hours to collect sap, and } 3 \\text{ workers help equally, hours per worker?}", answer: 13.33, tolerance: 0.5 }
+];
+
+let mathGameActive = false;
+let mathCurrentScore = 0;
+let mathCurrentStreak = 0;
+let mathTimeRemaining = 45;
+let mathTimerInterval = null;
+let currentProblem = null;
+let usedProblems = [];
 function startRace(chosenLane) {
     if (raceInProgress) return;
     
@@ -527,6 +556,108 @@ function endAnimalGame() {
     showToast(`Game Over! Final Score: ${animalCurrentScore}`);
 }
 
+// Maple Math Challenge Functions
+function startMathGame() {
+    mathGameActive = true;
+    mathCurrentScore = 0;
+    mathCurrentStreak = 0;
+    mathTimeRemaining = 45;
+    usedProblems = [];
+    
+    mathScore.textContent = "0";
+    mathStreak.textContent = "0";
+    mathTimer.textContent = "45";
+    
+    startMathBtn.style.display = "none";
+    resetMathBtn.style.display = "none";
+    mathAnswer.disabled = false;
+    submitMathBtn.disabled = false;
+    mathAnswer.value = "";
+    mathAnswer.focus();
+    
+    mathTimerInterval = setInterval(() => {
+        mathTimeRemaining--;
+        mathTimer.textContent = mathTimeRemaining;
+        
+        if (mathTimeRemaining <= 0) {
+            endMathGame();
+        }
+    }, 1000);
+    
+    showNextMathProblem();
+}
+
+function showNextMathProblem() {
+    if (!mathGameActive) return;
+    
+    // Reset used problems if we've gone through all of them
+    if (usedProblems.length === mathProblems.length) {
+        usedProblems = [];
+    }
+    
+    // Get a random unused problem
+    let randomIndex;
+    do {
+        randomIndex = Math.floor(Math.random() * mathProblems.length);
+    } while (usedProblems.includes(randomIndex));
+    
+    usedProblems.push(randomIndex);
+    currentProblem = mathProblems[randomIndex];
+    
+    // Render LaTeX
+    equationDisplay.innerHTML = `$$${currentProblem.latex}$$`;
+    MathJax.typesetPromise([equationDisplay]).catch(err => console.log(err));
+    
+    mathAnswer.value = "";
+    mathAnswer.focus();
+}
+
+function checkMathAnswer() {
+    if (!mathGameActive || !currentProblem) return;
+    
+    const userAnswer = parseFloat(mathAnswer.value);
+    
+    if (isNaN(userAnswer)) {
+        showToast("Please enter a number");
+        return;
+    }
+    
+    const difference = Math.abs(userAnswer - currentProblem.answer);
+    
+    if (difference <= currentProblem.tolerance) {
+        // Correct!
+        mathCurrentScore++;
+        mathCurrentStreak++;
+        mathScore.textContent = mathCurrentScore;
+        mathStreak.textContent = mathCurrentStreak;
+        
+        showToast("✓ Correct!");
+        setTimeout(() => showNextMathProblem(), 500);
+    } else {
+        // Wrong!
+        mathCurrentStreak = 0;
+        mathStreak.textContent = "0";
+        
+        showToast(`✗ Wrong! Answer: ${currentProblem.answer.toFixed(2)}`);
+        setTimeout(() => showNextMathProblem(), 1000);
+    }
+}
+
+function endMathGame() {
+    mathGameActive = false;
+    mathAnswer.disabled = true;
+    submitMathBtn.disabled = true;
+    startMathBtn.style.display = "inline-block";
+    resetMathBtn.style.display = "inline-block";
+    
+    if (mathTimerInterval) {
+        clearInterval(mathTimerInterval);
+        mathTimerInterval = null;
+    }
+    
+    showToast(`Challenge Over! Final Score: ${mathCurrentScore}`);
+}
+
 if (startAnimalBtn) {
     startAnimalBtn.addEventListener("click", startAnimalGame);
 }
@@ -537,6 +668,29 @@ if (mooseBtn) {
 
 if (deerBtn) {
     deerBtn.addEventListener("click", () => checkAnimal("deer"));
+}
+
+if (startMathBtn) {
+    startMathBtn.addEventListener("click", startMathGame);
+}
+
+if (submitMathBtn) {
+    submitMathBtn.addEventListener("click", checkMathAnswer);
+}
+
+if (mathAnswer) {
+    mathAnswer.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            checkMathAnswer();
+        }
+    });
+}
+
+if (resetMathBtn) {
+    resetMathBtn.addEventListener("click", () => {
+        mathAnswer.value = "";
+        startMathGame();
+    });
 }
 
 if (resetAnimalBtn) {

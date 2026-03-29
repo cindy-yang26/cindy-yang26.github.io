@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
     <header class="site-header" id="top">
@@ -279,6 +281,25 @@
                 </div>
                 <button class="btn btn-secondary btn-small" id="startAnimalBtn" type="button">Start Game</button>
                 <button class="btn btn-secondary btn-small" id="resetAnimalBtn" type="button" style="display:none;">Play Again</button>
+            </article>
+
+            <article class="panel maple-math-panel">
+                <h3>Maple Math Challenge</h3>
+                <p class="game-intro">Solve Vermont-themed math equations. Quick thinking required!</p>
+                <div class="maple-math-game">
+                    <div class="equation-display" id="equationDisplay"></div>
+                    <div class="math-input-group">
+                        <input type="number" id="mathAnswer" placeholder="Enter your answer" step="any">
+                        <button class="btn btn-primary btn-small" id="submitMathBtn" type="button">Check</button>
+                    </div>
+                </div>
+                <div class="math-stats">
+                    <span>Score: <span id="mathScore">0</span></span>
+                    <span>Streak: <span id="mathStreak">0</span></span>
+                    <span>Time: <span id="mathTimer">45</span>s</span>
+                </div>
+                <button class="btn btn-secondary btn-small" id="startMathBtn" type="button">Start Challenge</button>
+                <button class="btn btn-secondary btn-small" id="resetMathBtn" type="button" style="display:none;">Try Again</button>
             </article>
 
             <article class="panel fact-lab">

@@ -1421,3 +1421,76 @@ h3 {
         --section-space: 6.2rem;
     }
 }
+
+/* Maple Math Challenge Styling */
+.maple-math-panel {
+    background: linear-gradient(135deg, rgba(245, 236, 223, 0.6), rgba(138, 51, 40, 0.03));
+}
+
+.maple-math-game {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 1.5rem 0;
+}
+
+.equation-display {
+    background: white;
+    border: 2px solid rgba(138, 51, 40, 0.15);
+    border-radius: 0.8rem;
+    padding: 2rem;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--wood-smoke);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.math-input-group {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+.math-input-group input {
+    flex: 1;
+    padding: 0.8rem 1rem;
+    border: 2px solid rgba(95, 115, 82, 0.3);
+    border-radius: 0.6rem;
+    font-size: 1rem;
+    font-family: "Manrope", sans-serif;
+    transition: border-color 0.2s ease;
+}
+
+.math-input-group input:focus {
+    outline: none;
+    border-color: var(--barn-red);
+    box-shadow: 0 0 0 3px rgba(138, 51, 40, 0.1);
+}
+
+.math-input-group input:disabled {
+    background: rgba(0, 0, 0, 0.05);
+    color: rgba(39, 52, 41, 0.5);
+    cursor: not-allowed;
+}
+
+.math-stats {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: space-around;
+    padding: 1rem;
+    background: rgba(255, 251, 245, 0.5);
+    border-radius: 0.6rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--wood-smoke);
+}
+
+.math-stats span {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+}
