@@ -259,6 +259,27 @@
                 <button class="btn btn-secondary btn-small" id="resetRaceBtn" type="button">Race Again</button>
             </article>
 
+            <article class="panel moose-deer-panel">
+                <h3>Moose vs Deer Rapid-Fire</h3>
+                <p class="game-intro">What do you see? Click as fast as you can!</p>
+                <div class="moose-deer-game">
+                    <div class="animal-display" id="animalDisplay">
+                        <img id="animalImage" src="" alt="Animal" class="animal-image">
+                    </div>
+                    <div class="animal-buttons">
+                        <button class="animal-btn" id="mooseBtn" type="button">Moose</button>
+                        <button class="animal-btn" id="deerBtn" type="button">Deer</button>
+                    </div>
+                </div>
+                <div class="animal-stats">
+                    <span>Score: <span id="animalScore">0</span></span>
+                    <span>Lives: <span id="animalLives">3</span></span>
+                    <span>Streak: <span id="animalStreak">0</span></span>
+                </div>
+                <button class="btn btn-secondary btn-small" id="startAnimalBtn" type="button">Start Game</button>
+                <button class="btn btn-secondary btn-small" id="resetAnimalBtn" type="button" style="display:none;">Play Again</button>
+            </article>
+
             <article class="panel fact-lab">
                 <h3>Fun Facts</h3>
                 <div class="fact-grid">
