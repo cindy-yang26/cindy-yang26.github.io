@@ -17,6 +17,19 @@ const productList = document.getElementById("productList");
 const descriptionList = document.getElementById("descriptionList");
 const resetFarmerBtn = document.getElementById("resetFarmerBtn");
 const farmerMatchCount = document.getElementById("farmerMatchCount");
+const flavorList = document.getElementById("flavorList");
+const flavorDescriptionList = document.getElementById("flavorDescriptionList");
+const resetFlavorBtn = document.getElementById("resetFlavorBtn");
+const flavorMatchCount = document.getElementById("flavorMatchCount");
+const syrupColor = document.getElementById("syrupColor");
+const timeLeft = document.getElementById("timeLeft");
+const startMapleBtn = document.getElementById("startMapleBtn");
+const syrupScore = document.getElementById("syrupScore");
+const syrupStreak = document.getElementById("syrupStreak");
+const gradeButtons = document.querySelectorAll(".grade-btn");
+const raceButtons = document.querySelectorAll(".race-btn");
+const resetRaceBtn = document.getElementById("resetRaceBtn");
+const racingResult = document.getElementById("racingResult");
 const availableModes = [...new Set(Array.from(easterTargets, (el) => el.dataset.mode).filter(Boolean))];
 
 let toastTimer;
@@ -41,6 +54,22 @@ const vermontCards = [
 let gameCards = [];
 let flipped = [];
 let matched = [];
+
+// Maple Syrup Grade Roulette Data
+const syrupGrades = [
+    { grade: "golden", hex: "#f4d460", rgb: "244, 212, 96" },
+    { grade: "amber", hex: "#d4a040", rgb: "212, 160, 64" },
+    { grade: "dark", hex: "#8a6b3a", rgb: "138, 107, 58" },
+    { grade: "very-dark", hex: "#5a4a2a", rgb: "90, 74, 42" }
+];
+
+let maplegameActive = false;
+let mapleSyrupTimer = null;
+let mapleSyrupTime = 10;
+let mapleSyrupScore = 0;
+let mapleSyrupStreak = 0;
+let currentSyrupGrade = null;
+let syrupTimeMultiplier = 1;
 
 // Farmer's Market Game Data
 const farmerMarketPairs = [
@@ -291,6 +320,94 @@ function selectFlavorDescription(id, btn) {
 
 if (resetFlavorBtn) {
     resetFlavorBtn.addEventListener("click", initializeFlavorGame);
+}
+
+// Maple Syrup Racing Game Functions
+let raceInProgress = false;
+let playerChoice = null;
+
+function startRace(chosenLane) {
+    if (raceInProgress) return;
+    
+    raceInProgress = true;
+    playerChoice = chosenLane;
+    racingResult.textContent = "";
+    raceButtons.forEach(btn => btn.disabled = true);
+    
+    // Reset all syrup streams to starting position
+    const streams = document.querySelectorAll(".syrup-stream");
+    streams.forEach(stream => {
+        stream.style.width = "0%";
+    });
+    
+    // Simulate random race speeds for each lane
+    const raceSpeeds = [
+        Math.random() * 3000 + 2000,  // Golden
+        Math.random() * 3000 + 2000,  // Amber
+        Math.random() * 3000 + 2000,  // Dark
+        Math.random() * 3000 + 2000   // Very Dark
+    ];
+    
+    const minSpeed = Math.min(...raceSpeeds);
+    const winner = raceSpeeds.indexOf(minSpeed) + 1;
+    
+    // Animate all streams racing
+    const startTime = Date.now();
+    
+    const animateRace = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / minSpeed, 1);
+        
+        streams.forEach((stream, index) => {
+            const streamSpeed = raceSpeeds[index];
+            const streamProgress = Math.min(elapsed / streamSpeed, 1);
+            stream.style.width = (streamProgress * 100) + "%";
+        });
+        
+        if (progress < 1) {
+            requestAnimationFrame(animateRace);
+        } else {
+            // Race finished
+            finishRace(winner);
+        }
+    };
+    
+    animateRace();
+}
+
+function finishRace(winner) {
+    raceInProgress = false;
+    const grades = ["Golden", "Amber", "Dark", "Very Dark"];
+    const winnerGrade = grades[winner - 1];
+    
+    if (winner === parseInt(playerChoice)) {
+        racingResult.textContent = `🎉 You won! ${winnerGrade} syrup finished first!`;
+        racingResult.className = "racing-result winner";
+        showToast(`You picked the winner! ${winnerGrade} syrup!`);
+    } else {
+        racingResult.textContent = `${winnerGrade} syrup won! Better luck next time!`;
+        racingResult.className = "racing-result loser";
+        showToast(`${winnerGrade} syrup took it!`);
+    }
+    
+    raceButtons.forEach(btn => btn.disabled = false);
+}
+
+raceButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        startRace(btn.dataset.lane);
+    });
+});
+
+if (resetRaceBtn) {
+    resetRaceBtn.addEventListener("click", () => {
+        racingResult.textContent = "";
+        racingResult.className = "racing-result";
+        const streams = document.querySelectorAll(".syrup-stream");
+        streams.forEach(stream => {
+            stream.style.width = "0%";
+        });
+    });
 }
 
 const placeDetails = {
