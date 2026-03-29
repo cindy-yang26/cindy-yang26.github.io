@@ -531,11 +531,210 @@ h3 {
     margin-bottom: 0.25rem;
 }
 
-.fact-lab {
+.farmer-market-game {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 1rem;
+    border-radius: 0.9rem;
+    border: 1px solid rgba(39, 52, 41, 0.15);
+}
+
+.product-list,
+.description-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.farmer-product,
+.farmer-description {
+    background: rgba(255, 251, 245, 0.8);
+    border: 2px solid rgba(39, 52, 41, 0.25);
+    border-radius: 0.6rem;
+    padding: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    font-family: "Manrope", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--wood-smoke);
+}
+
+.farmer-product {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.farmer-product img {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.farmer-product span {
+    flex: 1;
+}
+
+.farmer-description {
+    padding: 0.7rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.farmer-product:hover,
+.farmer-description:hover {
+    border-color: var(--barn-red);
+    box-shadow: 0 2px 8px rgba(138, 51, 40, 0.1);
+    transform: translateX(2px);
+}
+
+.farmer-product.selected {
+    border-color: var(--barn-red);
+    background: rgba(138, 51, 40, 0.08);
+    box-shadow: 0 0 0 2px rgba(138, 51, 40, 0.15);
+}
+
+.farmer-product.matched,
+.farmer-description.matched {
+    background: rgba(95, 115, 82, 0.12);
+    border-color: var(--moss);
+    cursor: default;
+    opacity: 0.65;
+}
+
+.farmer-product.matched:hover,
+.farmer-description.matched:hover {
+    transform: none;
+}
+
+.farmer-description.wrong {
+    animation: shake 0.3s ease;
+    background: rgba(201, 86, 86, 0.1);
+    border-color: #c95656;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}
+
+.farmer-market-stats {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+    color: var(--wood-smoke);
+    font-size: 0.95rem;
+}
+
+@media (max-width: 860px) {
+    .farmer-market-game {
+        grid-template-columns: 1fr;
+    }
+}
+
+.ben-jerrys-panel {
     margin-top: 1rem;
 }
 
+.ben-jerrys-game {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 1rem;
+    border-radius: 0.9rem;
+    border: 1px solid rgba(138, 51, 40, 0.2);
+}
+
+.flavor-list,
+.flavor-description-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.flavor-button,
+.flavor-description-button {
+    background: rgba(255, 251, 245, 0.85);
+    border: 2px solid rgba(138, 51, 40, 0.3);
+    border-radius: 0.6rem;
+    padding: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    font-family: "Manrope", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--wood-smoke);
+}
+
+.flavor-description-button {
+    padding: 0.7rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.flavor-button:hover,
+.flavor-description-button:hover {
+    border-color: #d67a68;
+    box-shadow: 0 2px 8px rgba(138, 51, 40, 0.12);
+    transform: translateX(2px);
+}
+
+.flavor-button.selected {
+    border-color: #d67a68;
+    background: rgba(214, 122, 104, 0.1);
+    box-shadow: 0 0 0 2px rgba(214, 122, 104, 0.15);
+}
+
+.flavor-button.matched,
+.flavor-description-button.matched {
+    background: rgba(95, 115, 82, 0.12);
+    border-color: var(--moss);
+    cursor: default;
+    opacity: 0.65;
+}
+
+.flavor-button.matched:hover,
+.flavor-description-button.matched:hover {
+    transform: none;
+}
+
+.flavor-description-button.wrong {
+    animation: shake 0.3s ease;
+    background: rgba(201, 86, 86, 0.1);
+    border-color: #c95656;
+}
+
+.ben-jerrys-stats {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+    color: var(--wood-smoke);
+    font-size: 0.95rem;
+}
+
+@media (max-width: 860px) {
+    .ben-jerrys-game {
+        grid-template-columns: 1fr;
+    }
+}
+
 .memory-game-panel {
+    margin-top: 1rem;
+}
+
+.farmer-market-panel {
     margin-top: 1rem;
 }
 
