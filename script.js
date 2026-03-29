@@ -38,6 +38,7 @@ const resetAnimalBtn = document.getElementById("resetAnimalBtn");
 const animalScore = document.getElementById("animalScore");
 const animalLives = document.getElementById("animalLives");
 const animalStreak = document.getElementById("animalStreak");
+const animalTimer = document.getElementById("animalTimer");
 const availableModes = [...new Set(Array.from(easterTargets, (el) => el.dataset.mode).filter(Boolean))];
 
 let toastTimer;
@@ -350,6 +351,8 @@ let animalGameActive = false;
 let animalLivesRemaining = 3;
 let animalCurrentScore = 0;
 let animalCurrentStreak = 0;
+let animalTimeRemaining = 60;
+let animalTimerInterval = null;
 let currentAnimal = null;
 let animalGameTimer = null;
 
@@ -443,15 +446,27 @@ function startAnimalGame() {
     animalLivesRemaining = 3;
     animalCurrentScore = 0;
     animalCurrentStreak = 0;
+    animalTimeRemaining = 60;
     
     animalScore.textContent = "0";
     animalLives.textContent = "3";
     animalStreak.textContent = "0";
+    animalTimer.textContent = "60";
     
     startAnimalBtn.style.display = "none";
     resetAnimalBtn.style.display = "none";
     mooseBtn.disabled = false;
     deerBtn.disabled = false;
+    
+    // Start countdown timer
+    animalTimerInterval = setInterval(() => {
+        animalTimeRemaining--;
+        animalTimer.textContent = animalTimeRemaining;
+        
+        if (animalTimeRemaining <= 0) {
+            endAnimalGame();
+        }
+    }, 1000);
     
     showNextAnimal();
 }
@@ -478,7 +493,7 @@ function checkAnimal(guess) {
         animalStreak.textContent = animalCurrentStreak;
         
         showToast("✓ Correct!");
-        setTimeout(() => showNextAnimal(), 300);
+        setTimeout(() => showNextAnimal(), 10);
     } else {
         // Wrong!
         animalLivesRemaining--;
@@ -491,7 +506,7 @@ function checkAnimal(guess) {
         if (animalLivesRemaining <= 0) {
             endAnimalGame();
         } else {
-            setTimeout(() => showNextAnimal(), 600);
+            setTimeout(() => showNextAnimal(), 10);
         }
     }
 }
@@ -502,6 +517,12 @@ function endAnimalGame() {
     deerBtn.disabled = true;
     startAnimalBtn.style.display = "inline-block";
     resetAnimalBtn.style.display = "inline-block";
+    
+    // Clear the timer interval
+    if (animalTimerInterval) {
+        clearInterval(animalTimerInterval);
+        animalTimerInterval = null;
+    }
     
     showToast(`Game Over! Final Score: ${animalCurrentScore}`);
 }
