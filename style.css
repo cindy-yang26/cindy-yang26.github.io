@@ -535,6 +535,112 @@ h3 {
     margin-top: 1rem;
 }
 
+.memory-game-panel {
+    margin-top: 1rem;
+}
+
+.game-intro {
+    color: rgba(42, 34, 30, 0.8);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.7rem;
+    margin-bottom: 1.2rem;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 1rem;
+    border-radius: 0.9rem;
+    border: 1px solid rgba(39, 52, 41, 0.15);
+}
+
+.game-card {
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, rgba(138, 51, 40, 0.2), rgba(95, 115, 82, 0.2));
+    border: 2px solid rgba(39, 52, 41, 0.3);
+    border-radius: 0.6rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    transition: all 0.3s ease, transform 0.6s ease;
+    position: relative;
+    user-select: none;
+    transform-style: preserve-3d;
+    padding: 0;
+    overflow: hidden;
+}
+
+.card-back {
+    font-size: 1.8rem;
+    color: var(--wood-smoke);
+    position: absolute;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(138, 51, 40, 0.2), rgba(95, 115, 82, 0.2));
+    transition: opacity 0.3s ease;
+}
+
+.card-front {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.game-card:hover {
+    border-color: var(--barn-red);
+    box-shadow: 0 4px 12px rgba(138, 51, 40, 0.15);
+    transform: translateY(-2px);
+}
+
+.game-card.flipped {
+    background: linear-gradient(135deg, rgba(138, 51, 40, 0.15), rgba(95, 115, 82, 0.15));
+    border-color: var(--barn-red);
+}
+
+.game-card.flipped .card-back {
+    opacity: 0;
+}
+
+.game-card.flipped .card-front {
+    opacity: 1;
+}
+
+.game-card.matched {
+    background: rgba(95, 115, 82, 0.15);
+    border-color: var(--moss);
+    cursor: default;
+    opacity: 0.7;
+}
+
+.game-card.matched:hover {
+    transform: none;
+}
+
+.game-stats {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+    color: var(--wood-smoke);
+    font-size: 0.95rem;
+}
+
+.btn-small {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
+}
+
 .fact-grid {
     display: grid;
     gap: 0.55rem;
