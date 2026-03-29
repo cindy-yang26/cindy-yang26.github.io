@@ -30,6 +30,14 @@ const gradeButtons = document.querySelectorAll(".grade-btn");
 const raceButtons = document.querySelectorAll(".race-btn");
 const resetRaceBtn = document.getElementById("resetRaceBtn");
 const racingResult = document.getElementById("racingResult");
+const animalImage = document.getElementById("animalImage");
+const mooseBtn = document.getElementById("mooseBtn");
+const deerBtn = document.getElementById("deerBtn");
+const startAnimalBtn = document.getElementById("startAnimalBtn");
+const resetAnimalBtn = document.getElementById("resetAnimalBtn");
+const animalScore = document.getElementById("animalScore");
+const animalLives = document.getElementById("animalLives");
+const animalStreak = document.getElementById("animalStreak");
 const availableModes = [...new Set(Array.from(easterTargets, (el) => el.dataset.mode).filter(Boolean))];
 
 let toastTimer;
@@ -326,6 +334,25 @@ if (resetFlavorBtn) {
 let raceInProgress = false;
 let playerChoice = null;
 
+// Moose vs Deer Game Data
+const animalImages = [
+    { image: "images/moose.jpg", answer: "moose", label: "Moose" },
+    { image: "images/moose.jpg", answer: "moose", label: "Moose" },
+    { image: "images/moose.jpg", answer: "moose", label: "Moose" },
+    { image: "images/moose.jpg", answer: "moose", label: "Moose" },
+    { image: "images/deer.jpg", answer: "deer", label: "Deer" },
+    { image: "images/deer.jpg", answer: "deer", label: "Deer" },
+    { image: "images/deer.jpg", answer: "deer", label: "Deer" },
+    { image: "images/deer.jpg", answer: "deer", label: "Deer" }
+];
+
+let animalGameActive = false;
+let animalLivesRemaining = 3;
+let animalCurrentScore = 0;
+let animalCurrentStreak = 0;
+let currentAnimal = null;
+let animalGameTimer = null;
+
 function startRace(chosenLane) {
     if (raceInProgress) return;
     
@@ -408,6 +435,91 @@ if (resetRaceBtn) {
             stream.style.width = "0%";
         });
     });
+}
+
+// Moose vs Deer Game Functions
+function startAnimalGame() {
+    animalGameActive = true;
+    animalLivesRemaining = 3;
+    animalCurrentScore = 0;
+    animalCurrentStreak = 0;
+    
+    animalScore.textContent = "0";
+    animalLives.textContent = "3";
+    animalStreak.textContent = "0";
+    
+    startAnimalBtn.style.display = "none";
+    resetAnimalBtn.style.display = "none";
+    mooseBtn.disabled = false;
+    deerBtn.disabled = false;
+    
+    showNextAnimal();
+}
+
+function showNextAnimal() {
+    if (!animalGameActive) return;
+    
+    currentAnimal = animalImages[Math.floor(Math.random() * animalImages.length)];
+    console.log("Showing animal:", currentAnimal);
+    console.log("Image element:", animalImage);
+    console.log("Setting src to:", currentAnimal.image);
+    animalImage.src = currentAnimal.image;
+    animalImage.alt = currentAnimal.label;
+}
+
+function checkAnimal(guess) {
+    if (!animalGameActive || !currentAnimal) return;
+    
+    if (guess === currentAnimal.answer) {
+        // Correct!
+        animalCurrentScore++;
+        animalCurrentStreak++;
+        animalScore.textContent = animalCurrentScore;
+        animalStreak.textContent = animalCurrentStreak;
+        
+        showToast("✓ Correct!");
+        setTimeout(() => showNextAnimal(), 300);
+    } else {
+        // Wrong!
+        animalLivesRemaining--;
+        animalLives.textContent = animalLivesRemaining;
+        animalCurrentStreak = 0;
+        animalStreak.textContent = "0";
+        
+        showToast("✗ Wrong!");
+        
+        if (animalLivesRemaining <= 0) {
+            endAnimalGame();
+        } else {
+            setTimeout(() => showNextAnimal(), 600);
+        }
+    }
+}
+
+function endAnimalGame() {
+    animalGameActive = false;
+    mooseBtn.disabled = true;
+    deerBtn.disabled = true;
+    startAnimalBtn.style.display = "inline-block";
+    resetAnimalBtn.style.display = "inline-block";
+    
+    showToast(`Game Over! Final Score: ${animalCurrentScore}`);
+}
+
+if (startAnimalBtn) {
+    startAnimalBtn.addEventListener("click", startAnimalGame);
+}
+
+if (mooseBtn) {
+    mooseBtn.addEventListener("click", () => checkAnimal("moose"));
+}
+
+if (deerBtn) {
+    deerBtn.addEventListener("click", () => checkAnimal("deer"));
+}
+
+if (resetAnimalBtn) {
+    resetAnimalBtn.addEventListener("click", startAnimalGame);
 }
 
 const placeDetails = {

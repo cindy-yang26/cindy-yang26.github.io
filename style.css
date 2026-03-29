@@ -863,6 +863,109 @@ h3 {
     }
 }
 
+.moose-deer-panel {
+    margin-top: 1rem;
+}
+
+.moose-deer-game {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 1.5rem;
+    border-radius: 0.9rem;
+    border: 1px solid rgba(39, 52, 41, 0.2);
+}
+
+.animal-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 240px;
+    background: linear-gradient(135deg, rgba(95, 115, 82, 0.08), rgba(138, 51, 40, 0.05));
+    border: 2px dashed rgba(39, 52, 41, 0.2);
+    border-radius: 0.8rem;
+}
+
+.animal-image {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+.animal-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.animal-btn {
+    background: rgba(255, 251, 245, 0.85);
+    border: 2px solid rgba(39, 52, 41, 0.25);
+    border-radius: 0.6rem;
+    padding: 1rem;
+    cursor: pointer;
+    font-family: "Manrope", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--wood-smoke);
+    transition: all 0.2s ease;
+}
+
+.animal-btn:hover:not(:disabled) {
+    border-color: var(--barn-red);
+    background: #fff;
+    box-shadow: 0 6px 16px rgba(138, 51, 40, 0.2);
+    transform: translateY(-3px);
+}
+
+.animal-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.animal-stats {
+    display: flex;
+    gap: 2rem;
+    font-weight: 700;
+    color: var(--wood-smoke);
+    font-size: 1rem;
+    justify-content: center;
+}
+
+.animal-stats span {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.animal-stats span span {
+    color: var(--barn-red);
+    font-size: 1.2rem;
+}
+
+@media (max-width: 860px) {
+    .animal-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    .animal-display {
+        min-height: 200px;
+    }
+    
+    .animal-image {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .animal-stats {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+}
+
 .maple-syrup-panel {
     margin-top: 1rem;
 }
