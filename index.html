@@ -215,6 +215,7 @@
                     <button class="game-tab" id="gameTabRace" data-game-target="race" role="tab" aria-selected="false" aria-controls="gamePanelRace" type="button">Syrup Racing</button>
                     <button class="game-tab" id="gameTabAnimal" data-game-target="animal" role="tab" aria-selected="false" aria-controls="gamePanelAnimal" type="button">Moose vs Deer</button>
                     <button class="game-tab" id="gameTabMath" data-game-target="math" role="tab" aria-selected="false" aria-controls="gamePanelMath" type="button">Maple Math</button>
+                    <button class="game-tab" id="gameTabEthan" data-game-target="ethan" role="tab" aria-selected="false" aria-controls="gamePanelEthan" type="button">Ethan Allen Express</button>
                 </div>
 
                 <div class="game-panel-viewport">
@@ -314,6 +315,22 @@
                             <span>Score: <span id="mathScore">0</span></span>
                             <span>Streak: <span id="mathStreak">0</span></span>
                             <span>Time: <span class="math-time-value"><span id="mathTimer">45</span>s</span></span>
+                        </div>
+                    </article>
+
+                    <article class="game-panel ethan-express-panel" id="gamePanelEthan" data-game-panel="ethan" role="tabpanel" aria-labelledby="gameTabEthan" hidden>
+                        <h4>Ethan Allen Express Route Run</h4>
+                        <p class="game-intro">Guide the Ethan Allen Express across Vermont. Pick up local products and grow your train without crashing into yourself or the Vermont border.</p>
+                        <div class="ethan-express-game">
+                            <div class="ethan-express-board" id="trainBoard" role="img" aria-label="Vermont-themed map board for the Ethan Allen Express game">
+                                <button class="btn btn-secondary btn-small" id="startTrainBtn" type="button">Start Run</button>
+                            </div>
+                        </div>
+                        <div class="ethan-express-stats">
+                            <span>Stops made: <span id="trainScore">0</span></span>
+                            <span>Train length: <span id="trainLength">3</span></span>
+                            <span>Pickup: <span id="trainProduct">Syrup</span></span>
+                            <span>Controls: Arrow keys or WASD</span>
                         </div>
                     </article>
                 </div>
