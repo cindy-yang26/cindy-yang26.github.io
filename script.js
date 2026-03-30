@@ -30,23 +30,25 @@ const gradeButtons = document.querySelectorAll(".grade-btn");
 const raceButtons = document.querySelectorAll(".race-btn");
 const resetRaceBtn = document.getElementById("resetRaceBtn");
 const racingResult = document.getElementById("racingResult");
+const animalDisplay = document.getElementById("animalDisplay");
 const animalImage = document.getElementById("animalImage");
+const animalRoundIndicator = document.getElementById("animalRoundIndicator");
 const mooseBtn = document.getElementById("mooseBtn");
 const deerBtn = document.getElementById("deerBtn");
 const startAnimalBtn = document.getElementById("startAnimalBtn");
-const resetAnimalBtn = document.getElementById("resetAnimalBtn");
 const animalScore = document.getElementById("animalScore");
 const animalLives = document.getElementById("animalLives");
 const animalStreak = document.getElementById("animalStreak");
 const animalTimer = document.getElementById("animalTimer");
 const equationDisplay = document.getElementById("equationDisplay");
+const equationText = document.getElementById("equationText");
 const mathAnswer = document.getElementById("mathAnswer");
-const submitMathBtn = document.getElementById("submitMathBtn");
 const startMathBtn = document.getElementById("startMathBtn");
-const resetMathBtn = document.getElementById("resetMathBtn");
 const mathScore = document.getElementById("mathScore");
 const mathStreak = document.getElementById("mathStreak");
 const mathTimer = document.getElementById("mathTimer");
+const gameTabs = document.querySelectorAll(".game-tab");
+const gamePanels = document.querySelectorAll(".game-panel");
 const availableModes = [...new Set(Array.from(easterTargets, (el) => el.dataset.mode).filter(Boolean))];
 
 let toastTimer;
@@ -342,6 +344,27 @@ if (resetFlavorBtn) {
 // Maple Syrup Racing Game Functions
 let raceInProgress = false;
 let playerChoice = null;
+let raceAnimationFrameId = null;
+let raceLaneStates = [];
+
+function buildLaneState() {
+    return {
+        progress: 0,
+        velocity: 16 + Math.random() * 5, // % per second
+        acceleration: (Math.random() - 0.5) * 2,
+        phaseMsLeft: 350 + Math.random() * 700
+    };
+}
+
+function setRacingResult(message = "", statusClass = "") {
+    if (!racingResult) {
+        return;
+    }
+
+    racingResult.textContent = message;
+    racingResult.className = `racing-result${statusClass ? ` ${statusClass}` : ""}`;
+    racingResult.hidden = message.trim().length === 0;
+}
 
 // Moose vs Deer Game Data
 const animalImages = [
@@ -363,6 +386,7 @@ let animalTimeRemaining = 60;
 let animalTimerInterval = null;
 let currentAnimal = null;
 let animalGameTimer = null;
+let animalRoundCount = 0;
 
 // Maple Math Challenge Data - Simple arithmetic questions
 const mathProblems = [
@@ -406,12 +430,67 @@ let mathTimeRemaining = 45;
 let mathTimerInterval = null;
 let currentProblem = null;
 let usedProblems = [];
+let mathAdvancePending = false;
+let currentGameIndex = 0;
+
+function showGamePanelByIndex(index, moveFocus = false) {
+    if (gameTabs.length === 0 || gamePanels.length === 0) {
+        return;
+    }
+
+    const safeIndex = (index + gameTabs.length) % gameTabs.length;
+    currentGameIndex = safeIndex;
+    const targetKey = gameTabs[safeIndex].dataset.gameTarget;
+
+    gameTabs.forEach((tab, tabIndex) => {
+        const isActive = tabIndex === safeIndex;
+        tab.classList.toggle("active", isActive);
+        tab.setAttribute("aria-selected", String(isActive));
+
+        if (moveFocus && isActive) {
+            tab.focus();
+        }
+    });
+
+    gamePanels.forEach((panel) => {
+        const isActive = panel.dataset.gamePanel === targetKey;
+        panel.classList.toggle("active", isActive);
+        panel.hidden = !isActive;
+    });
+
+}
+
+function initializeGameSwitcher() {
+    if (gameTabs.length === 0 || gamePanels.length === 0) {
+        return;
+    }
+
+    gameTabs.forEach((tab, tabIndex) => {
+        tab.addEventListener("click", () => {
+            showGamePanelByIndex(tabIndex);
+        });
+
+        tab.addEventListener("keydown", (event) => {
+            if (event.key === "ArrowRight") {
+                event.preventDefault();
+                showGamePanelByIndex(tabIndex + 1, true);
+            }
+
+            if (event.key === "ArrowLeft") {
+                event.preventDefault();
+                showGamePanelByIndex(tabIndex - 1, true);
+            }
+        });
+    });
+
+    showGamePanelByIndex(0);
+}
 function startRace(chosenLane) {
     if (raceInProgress) return;
     
     raceInProgress = true;
     playerChoice = chosenLane;
-    racingResult.textContent = "";
+    setRacingResult();
     raceButtons.forEach(btn => btn.disabled = true);
     
     // Reset all syrup streams to starting position
@@ -419,59 +498,103 @@ function startRace(chosenLane) {
     streams.forEach(stream => {
         stream.style.width = "0%";
     });
-    
-    // Simulate random race speeds for each lane
-    const raceSpeeds = [
-        Math.random() * 3000 + 2000,  // Golden
-        Math.random() * 3000 + 2000,  // Amber
-        Math.random() * 3000 + 2000,  // Dark
-        Math.random() * 3000 + 2000   // Very Dark
-    ];
-    
-    const minSpeed = Math.min(...raceSpeeds);
-    const winner = raceSpeeds.indexOf(minSpeed) + 1;
-    
-    // Animate all streams racing
-    const startTime = Date.now();
-    
-    const animateRace = () => {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / minSpeed, 1);
-        
-        streams.forEach((stream, index) => {
-            const streamSpeed = raceSpeeds[index];
-            const streamProgress = Math.min(elapsed / streamSpeed, 1);
-            stream.style.width = (streamProgress * 100) + "%";
-        });
-        
-        if (progress < 1) {
-            requestAnimationFrame(animateRace);
-        } else {
-            // Race finished
-            finishRace(winner);
+
+    raceLaneStates = Array.from(streams, () => buildLaneState());
+    let lastTimestamp = null;
+    let raceAgeSeconds = 0;
+
+    const animateRace = (timestamp) => {
+        if (!raceInProgress) {
+            return;
         }
+
+        if (lastTimestamp === null) {
+            lastTimestamp = timestamp;
+        }
+
+        const deltaSeconds = Math.min((timestamp - lastTimestamp) / 1000, 0.05);
+        lastTimestamp = timestamp;
+        raceAgeSeconds += deltaSeconds;
+        const avgProgress = raceLaneStates.reduce((sum, state) => sum + state.progress, 0) / raceLaneStates.length;
+        const avgVelocity = raceLaneStates.reduce((sum, state) => sum + state.velocity, 0) / raceLaneStates.length;
+        const leaderProgress = Math.max(...raceLaneStates.map((state) => state.progress));
+        let winnerIndex = -1;
+
+        streams.forEach((stream, index) => {
+            const laneState = raceLaneStates[index];
+            laneState.phaseMsLeft -= deltaSeconds * 1000;
+
+            if (laneState.phaseMsLeft <= 0) {
+                const trailingFactor = Math.max(0, (avgProgress - laneState.progress) / 100);
+                const leaderGapFactor = Math.max(0, (leaderProgress - laneState.progress) / 100);
+                const racePhaseBoost = laneState.progress > 45 ? 0.12 : 0;
+                const burstChance = 0.2 + trailingFactor * 0.45 + leaderGapFactor * 0.4 + racePhaseBoost;
+                const clampedBurstChance = Math.max(0.12, Math.min(0.9, burstChance));
+
+                if (Math.random() < clampedBurstChance) {
+                    laneState.acceleration = 1.8 + Math.random() * 5.2;
+                    laneState.phaseMsLeft = 280 + Math.random() * 560;
+                } else {
+                    laneState.acceleration = -2.8 + Math.random() * 2.2;
+                    laneState.phaseMsLeft = 420 + Math.random() * 900;
+                }
+            }
+
+            const finishFatigue = Math.max(0, laneState.progress - 75) * 0.08;
+            const randomDrift = (Math.random() - 0.5) * 2.4;
+            const isLeader = laneState.progress >= leaderProgress - 0.001;
+            const leaderPenalty = isLeader && raceAgeSeconds > 1 ? (0.4 + Math.random() * 0.9) : 0;
+            const comebackBoost = Math.max(0, (leaderProgress - laneState.progress - 8) * 0.06);
+
+            laneState.velocity += (laneState.acceleration + comebackBoost - leaderPenalty - finishFatigue + randomDrift) * deltaSeconds;
+
+            // Keep the opening pack tighter so early leads don't lock in outcomes.
+            if (raceAgeSeconds < 1.6) {
+                laneState.velocity += (avgVelocity - laneState.velocity) * 0.3 * deltaSeconds;
+            }
+
+            laneState.velocity = Math.max(8, Math.min(34, laneState.velocity));
+            laneState.progress = Math.min(100, laneState.progress + laneState.velocity * deltaSeconds);
+
+            stream.style.width = `${laneState.progress}%`;
+
+            if (laneState.progress >= 100 && winnerIndex === -1) {
+                winnerIndex = index;
+            }
+        });
+
+        if (winnerIndex !== -1) {
+            finishRace(winnerIndex + 1);
+            return;
+        }
+
+        raceAnimationFrameId = requestAnimationFrame(animateRace);
     };
-    
-    animateRace();
+
+    raceAnimationFrameId = requestAnimationFrame(animateRace);
 }
 
 function finishRace(winner) {
     raceInProgress = false;
+    if (raceAnimationFrameId !== null) {
+        cancelAnimationFrame(raceAnimationFrameId);
+        raceAnimationFrameId = null;
+    }
     const grades = ["Golden", "Amber", "Dark", "Very Dark"];
     const winnerGrade = grades[winner - 1];
     
     if (winner === parseInt(playerChoice)) {
-        racingResult.textContent = `🎉 You won! ${winnerGrade} syrup finished first!`;
-        racingResult.className = "racing-result winner";
+        setRacingResult(`🎉 You won! ${winnerGrade} syrup finished first!`, "winner");
         showToast(`You picked the winner! ${winnerGrade} syrup!`);
     } else {
-        racingResult.textContent = `${winnerGrade} syrup won! Better luck next time!`;
-        racingResult.className = "racing-result loser";
+        setRacingResult(`${winnerGrade} syrup won! Better luck next time!`, "loser");
         showToast(`${winnerGrade} syrup took it!`);
     }
     
     raceButtons.forEach(btn => btn.disabled = false);
 }
+
+setRacingResult();
 
 raceButtons.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -481,12 +604,18 @@ raceButtons.forEach(btn => {
 
 if (resetRaceBtn) {
     resetRaceBtn.addEventListener("click", () => {
-        racingResult.textContent = "";
-        racingResult.className = "racing-result";
+        raceInProgress = false;
+        if (raceAnimationFrameId !== null) {
+            cancelAnimationFrame(raceAnimationFrameId);
+            raceAnimationFrameId = null;
+        }
+        setRacingResult();
+        raceLaneStates = [];
         const streams = document.querySelectorAll(".syrup-stream");
         streams.forEach(stream => {
             stream.style.width = "0%";
         });
+        raceButtons.forEach(btn => btn.disabled = false);
     });
 }
 
@@ -497,14 +626,18 @@ function startAnimalGame() {
     animalCurrentScore = 0;
     animalCurrentStreak = 0;
     animalTimeRemaining = 60;
+    animalRoundCount = 0;
     
     animalScore.textContent = "0";
     animalLives.textContent = "3";
     animalStreak.textContent = "0";
     animalTimer.textContent = "60";
+    if (animalRoundIndicator) {
+        animalRoundIndicator.textContent = "Round 0";
+    }
     
+    startAnimalBtn.textContent = "Start Game";
     startAnimalBtn.style.display = "none";
-    resetAnimalBtn.style.display = "none";
     mooseBtn.disabled = false;
     deerBtn.disabled = false;
     
@@ -525,6 +658,16 @@ function showNextAnimal() {
     if (!animalGameActive) return;
     
     currentAnimal = animalImages[Math.floor(Math.random() * animalImages.length)];
+    animalRoundCount++;
+    if (animalRoundIndicator) {
+        animalRoundIndicator.textContent = `Round ${animalRoundCount}`;
+    }
+    if (animalDisplay) {
+        animalDisplay.classList.remove("new-round");
+        // Force reflow so animation restarts even for consecutive rounds.
+        void animalDisplay.offsetWidth;
+        animalDisplay.classList.add("new-round");
+    }
     console.log("Showing animal:", currentAnimal);
     console.log("Image element:", animalImage);
     console.log("Setting src to:", currentAnimal.image);
@@ -565,8 +708,13 @@ function endAnimalGame() {
     animalGameActive = false;
     mooseBtn.disabled = true;
     deerBtn.disabled = true;
+    if (animalDisplay) {
+        animalDisplay.classList.remove("new-round");
+    }
+    animalImage.src = "";
+    animalImage.alt = "Animal";
+    startAnimalBtn.textContent = "Play Again";
     startAnimalBtn.style.display = "inline-block";
-    resetAnimalBtn.style.display = "inline-block";
     
     // Clear the timer interval
     if (animalTimerInterval) {
@@ -584,17 +732,21 @@ function startMathGame() {
     mathCurrentStreak = 0;
     mathTimeRemaining = 45;
     usedProblems = [];
+    mathAdvancePending = false;
     
     mathScore.textContent = "0";
     mathStreak.textContent = "0";
     mathTimer.textContent = "45";
     
+    startMathBtn.textContent = "Start Challenge";
     startMathBtn.style.display = "none";
-    resetMathBtn.style.display = "none";
     mathAnswer.disabled = false;
-    submitMathBtn.disabled = false;
     mathAnswer.value = "";
     mathAnswer.focus();
+
+    if (equationText) {
+        equationText.textContent = "";
+    }
     
     mathTimerInterval = setInterval(() => {
         mathTimeRemaining--;
@@ -610,6 +762,7 @@ function startMathGame() {
 
 function showNextMathProblem() {
     if (!mathGameActive) return;
+    mathAdvancePending = false;
     
     // Reset used problems if we've gone through all of them
     if (usedProblems.length === mathProblems.length) {
@@ -626,49 +779,72 @@ function showNextMathProblem() {
     currentProblem = mathProblems[randomIndex];
     
     // Display text
-    equationDisplay.textContent = currentProblem.text;
+    if (equationText) {
+        equationText.textContent = currentProblem.text;
+    } else if (equationDisplay) {
+        equationDisplay.textContent = currentProblem.text;
+    }
     
     mathAnswer.value = "";
     mathAnswer.focus();
 }
 
-function checkMathAnswer() {
+function checkMathAnswer(showFeedback = false) {
     if (!mathGameActive || !currentProblem) return;
-    
-    const userAnswer = parseFloat(mathAnswer.value);
-    
-    if (isNaN(userAnswer)) {
-        showToast("Please enter a number");
+
+    const inputValue = mathAnswer.value.trim();
+    if (inputValue.length === 0) {
         return;
     }
-    
+
+    const userAnswer = parseFloat(inputValue);
+
+    if (isNaN(userAnswer)) {
+        if (showFeedback) {
+            showToast("Please enter a number");
+        }
+        return;
+    }
+
     const difference = Math.abs(userAnswer - currentProblem.answer);
-    
+
     if (difference <= currentProblem.tolerance) {
+        if (mathAdvancePending) {
+            return;
+        }
+
+        mathAdvancePending = true;
         // Correct!
         mathCurrentScore++;
         mathCurrentStreak++;
         mathScore.textContent = mathCurrentScore;
         mathStreak.textContent = mathCurrentStreak;
-        
+
         showToast("✓ Correct!");
-        setTimeout(() => showNextMathProblem(), 500);
-    } else {
-        // Wrong!
+        setTimeout(() => showNextMathProblem(), 120);
+        return;
+    }
+
+    if (showFeedback) {
+        // Wrong answer feedback only when manually requested (Enter key)
         mathCurrentStreak = 0;
         mathStreak.textContent = "0";
-        
         showToast(`✗ Wrong! Answer: ${currentProblem.answer.toFixed(2)}`);
-        setTimeout(() => showNextMathProblem(), 1000);
+        setTimeout(() => showNextMathProblem(), 400);
     }
 }
 
 function endMathGame() {
     mathGameActive = false;
+    mathAdvancePending = false;
+    currentProblem = null;
     mathAnswer.disabled = true;
-    submitMathBtn.disabled = true;
+    startMathBtn.textContent = "Play Again";
     startMathBtn.style.display = "inline-block";
-    resetMathBtn.style.display = "inline-block";
+
+    if (equationText) {
+        equationText.textContent = "";
+    }
     
     if (mathTimerInterval) {
         clearInterval(mathTimerInterval);
@@ -694,27 +870,16 @@ if (startMathBtn) {
     startMathBtn.addEventListener("click", startMathGame);
 }
 
-if (submitMathBtn) {
-    submitMathBtn.addEventListener("click", checkMathAnswer);
-}
-
 if (mathAnswer) {
+    mathAnswer.addEventListener("input", () => {
+        checkMathAnswer(false);
+    });
+
     mathAnswer.addEventListener("keypress", (e) => {
         if (e.key === "Enter") {
-            checkMathAnswer();
+            checkMathAnswer(true);
         }
     });
-}
-
-if (resetMathBtn) {
-    resetMathBtn.addEventListener("click", () => {
-        mathAnswer.value = "";
-        startMathGame();
-    });
-}
-
-if (resetAnimalBtn) {
-    resetAnimalBtn.addEventListener("click", startAnimalGame);
 }
 
 const placeDetails = {
@@ -778,7 +943,11 @@ if ("IntersectionObserver" in window) {
                 }
             });
         },
-        { threshold: 0.2 }
+        {
+            // Keep reveals working even for very tall sections.
+            threshold: 0.01,
+            rootMargin: "0px 0px -8% 0px",
+        }
     );
 
     revealItems.forEach((item) => observer.observe(item));
@@ -883,6 +1052,7 @@ mapPins.forEach((pin) => {
 });
 
 initializeRandomMode();
+initializeGameSwitcher();
 
 if (factButton && factOutput) {
     factButton.addEventListener("click", () => {

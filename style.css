@@ -442,6 +442,76 @@ h3 {
     overflow: hidden;
 }
 
+.vermont-games {
+    margin-top: 1rem;
+}
+
+.fact-lab {
+    margin-top: 1.25rem;
+}
+
+.vermont-games-header {
+    margin-bottom: 0.9rem;
+}
+
+.game-switcher {
+    display: grid;
+    gap: 0.55rem;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    margin-bottom: 1rem;
+}
+
+.game-tab {
+    background: rgba(255, 251, 245, 0.72);
+    border: 1px solid rgba(39, 52, 41, 0.28);
+    border-radius: 999px;
+    color: var(--wood-smoke);
+    cursor: pointer;
+    font-family: "Manrope", sans-serif;
+    font-size: 0.83rem;
+    font-weight: 700;
+    padding: 0.5rem 0.7rem;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.game-tab:hover,
+.game-tab:focus-visible {
+    background: #fff;
+    border-color: var(--barn-red);
+    box-shadow: 0 8px 16px rgba(25, 18, 12, 0.08);
+    outline: none;
+    transform: translateY(-1px);
+}
+
+.game-tab.active {
+    background: rgba(138, 51, 40, 0.12);
+    border-color: var(--barn-red);
+    box-shadow: 0 0 0 2px rgba(138, 51, 40, 0.12);
+}
+
+.game-panel-viewport {
+    border: 1px solid rgba(39, 52, 41, 0.14);
+    border-radius: 0.95rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.45);
+}
+
+.game-panel {
+    display: none;
+}
+
+.game-panel.active {
+    display: block;
+}
+
+.game-panel h4 {
+    color: var(--wood-smoke);
+    font-family: "Fraunces", serif;
+    font-size: 1.22rem;
+    margin-bottom: 0.5rem;
+}
+
+
 .map-copy {
     color: rgba(42, 34, 30, 0.8);
     font-size: 0.95rem;
@@ -641,7 +711,7 @@ h3 {
 }
 
 .ben-jerrys-panel {
-    margin-top: 1rem;
+    margin-top: 0;
 }
 
 .ben-jerrys-game {
@@ -731,7 +801,7 @@ h3 {
 }
 
 .maple-racing-panel {
-    margin-top: 1rem;
+    margin-top: 0;
 }
 
 .maple-racing-game {
@@ -843,6 +913,23 @@ h3 {
     border-radius: 0.5rem;
 }
 
+.race-footer {
+    align-items: center;
+    display: flex;
+    gap: 0.8rem;
+    justify-content: flex-end;
+    margin-top: 0.9rem;
+}
+
+.race-footer .racing-result {
+    flex: 1;
+    margin: 0;
+}
+
+.race-footer .btn {
+    flex-shrink: 0;
+}
+
 .racing-result.winner {
     color: #2d7a3a;
     background: rgba(95, 115, 82, 0.1);
@@ -864,7 +951,7 @@ h3 {
 }
 
 .moose-deer-panel {
-    margin-top: 1rem;
+    margin-top: 0;
 }
 
 .moose-deer-game {
@@ -882,10 +969,54 @@ h3 {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
     min-height: 240px;
     background: linear-gradient(135deg, rgba(95, 115, 82, 0.08), rgba(138, 51, 40, 0.05));
     border: 2px dashed rgba(39, 52, 41, 0.2);
     border-radius: 0.8rem;
+}
+
+.animal-display.new-round {
+    animation: animal-round-pulse 0.22s ease-out;
+}
+
+@keyframes animal-round-pulse {
+    0% {
+        border-color: rgba(138, 51, 40, 0.55);
+        box-shadow: inset 0 0 0 999px rgba(138, 51, 40, 0.08);
+    }
+
+    100% {
+        border-color: rgba(39, 52, 41, 0.2);
+        box-shadow: inset 0 0 0 999px rgba(138, 51, 40, 0);
+    }
+}
+
+.animal-round-indicator {
+    background: rgba(255, 250, 244, 0.9);
+    border: 1px solid rgba(39, 52, 41, 0.25);
+    border-radius: 999px;
+    color: var(--wood-smoke);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 0.3rem 0.65rem;
+    position: absolute;
+    right: 0.75rem;
+    text-transform: uppercase;
+    top: 0.75rem;
+}
+
+.animal-image[src=""] {
+    display: none;
+}
+
+#startAnimalBtn {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
 }
 
 .animal-image {
@@ -958,6 +1089,12 @@ h3 {
     .animal-image {
         width: 150px;
         height: 150px;
+    }
+
+    .animal-round-indicator {
+        font-size: 0.72rem;
+        right: 0.55rem;
+        top: 0.55rem;
     }
     
     .animal-stats {
@@ -1081,7 +1218,7 @@ h3 {
 }
 
 .memory-game-panel {
-    margin-top: 1rem;
+    margin-top: 0;
 }
 
 .farmer-market-panel {
@@ -1350,6 +1487,10 @@ h3 {
 }
 
 @media (max-width: 860px) {
+    .game-switcher {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .menu-toggle {
         display: inline-block;
     }
@@ -1408,6 +1549,10 @@ h3 {
 }
 
 @media (max-width: 520px) {
+    .game-switcher {
+        grid-template-columns: 1fr;
+    }
+
     .hero {
         padding-top: 4.5rem;
     }
@@ -1424,42 +1569,61 @@ h3 {
 
 /* Maple Math Challenge Styling */
 .maple-math-panel {
-    background: linear-gradient(135deg, rgba(245, 236, 223, 0.6), rgba(138, 51, 40, 0.03));
+    margin-top: 0;
+    background: transparent;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
 }
 
 .maple-math-game {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    margin: 1.5rem 0;
+    gap: 1.1rem;
+    margin: 1rem 0 1.25rem;
+    padding: 1.15rem;
+    background: #fff;
+    border: 1px solid rgba(39, 52, 41, 0.12);
+    border-radius: 0.9rem;
+    position: relative;
+    min-height: 280px;
 }
 
 .equation-display {
     background: white;
     border: 2px solid rgba(138, 51, 40, 0.15);
     border-radius: 0.8rem;
-    padding: 2rem;
+    padding: 1.5rem;
     min-height: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 2rem;
+    font-weight: 700;
     color: var(--wood-smoke);
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    position: relative;
+}
+
+.equation-text {
+    line-height: 1.2;
+    min-height: 1.2em;
 }
 
 .math-input-group {
     display: flex;
-    gap: 0.8rem;
+    gap: 0.6rem;
     align-items: center;
 }
 
 .math-input-group input {
     flex: 1;
-    padding: 0.8rem 1rem;
+    padding: 0.95rem 1rem;
     border: 2px solid rgba(95, 115, 82, 0.3);
     border-radius: 0.6rem;
-    font-size: 1rem;
+    font-size: 1.65rem;
+    font-weight: 700;
+    text-align: center;
     font-family: "Manrope", sans-serif;
     transition: border-color 0.2s ease;
 }
@@ -1476,21 +1640,50 @@ h3 {
     cursor: not-allowed;
 }
 
+#startMathBtn {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
 .math-stats {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
     justify-content: space-around;
-    padding: 1rem;
-    background: rgba(255, 251, 245, 0.5);
+    padding: 1.1rem;
+    background: #fff;
+    border: 1px solid rgba(39, 52, 41, 0.1);
     border-radius: 0.6rem;
-    font-size: 0.95rem;
-    font-weight: 500;
+    font-size: 1rem;
+    font-weight: 700;
     color: var(--wood-smoke);
 }
 
-.math-stats span {
+.math-stats > span {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.2rem;
+}
+
+.math-time-value {
+    white-space: nowrap;
+}
+
+@media (max-width: 860px) {
+    .maple-math-game {
+        min-height: 250px;
+        padding: 0.9rem;
+    }
+
+    .equation-display {
+        font-size: 1.5rem;
+        min-height: 98px;
+    }
+
+    .math-input-group input {
+        font-size: 1.35rem;
+    }
 }

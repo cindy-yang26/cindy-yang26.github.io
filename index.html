@@ -203,101 +203,121 @@
                 </article>
             </div>
 
-            <article class="panel memory-game-panel">
-                <h3>Vermont Memory Game</h3>
-                <p class="game-intro">Match pairs of Vermont landmarks and icons. How many can you find?</p>
-                <div class="game-board" id="gameBoard"></div>
-                <div class="game-stats">
-                    <span>Matches: <span id="matchCount">0</span>/6</span>
-                    <button class="btn btn-secondary btn-small" id="resetGameBtn" type="button">New Game</button>
+            <article class="vermont-games panel" aria-labelledby="vermontGamesHeading">
+                <div class="vermont-games-header">
+                    <h3 id="vermontGamesHeading">Vermont Games</h3>
+                    <p class="game-intro">One game at a time to keep this section compact. Switch anytime.</p>
                 </div>
-            </article>
 
-            <article class="panel ben-jerrys-panel">
-                <h3>Ben & Jerry's Flavor Quiz</h3>
-                <p class="game-intro">Match iconic Ben & Jerry's flavors with their descriptions. How many do you know?</p>
-                <div class="ben-jerrys-game">
-                    <div class="flavor-list" id="flavorList"></div>
-                    <div class="flavor-description-list" id="flavorDescriptionList"></div>
+                <div class="game-switcher" role="tablist" aria-label="Vermont games">
+                    <button class="game-tab active" id="gameTabMemory" data-game-target="memory" role="tab" aria-selected="true" aria-controls="gamePanelMemory" type="button">Memory</button>
+                    <button class="game-tab" id="gameTabFlavor" data-game-target="flavor" role="tab" aria-selected="false" aria-controls="gamePanelFlavor" type="button">Flavor Quiz</button>
+                    <button class="game-tab" id="gameTabRace" data-game-target="race" role="tab" aria-selected="false" aria-controls="gamePanelRace" type="button">Syrup Racing</button>
+                    <button class="game-tab" id="gameTabAnimal" data-game-target="animal" role="tab" aria-selected="false" aria-controls="gamePanelAnimal" type="button">Moose vs Deer</button>
+                    <button class="game-tab" id="gameTabMath" data-game-target="math" role="tab" aria-selected="false" aria-controls="gamePanelMath" type="button">Maple Math</button>
                 </div>
-                <div class="ben-jerrys-stats">
-                    <span>Flavors Matched: <span id="flavorMatchCount">0</span>/8</span>
-                    <button class="btn btn-secondary btn-small" id="resetFlavorBtn" type="button">New Quiz</button>
-                </div>
-            </article>
 
-            <article class="panel maple-racing-panel">
-                <h3>Maple Syrup Racing</h3>
-                <p class="game-intro">Pick your maple syrup and watch them race! Who will finish first?</p>
-                <div class="maple-racing-game">
-                    <div class="race-container">
-                        <div class="race-lane" id="lane1">
-                            <div class="syrup-stream golden-stream"></div>
-                            <span class="lane-label">Golden</span>
+                <div class="game-panel-viewport">
+                    <article class="game-panel active memory-game-panel" id="gamePanelMemory" data-game-panel="memory" role="tabpanel" aria-labelledby="gameTabMemory">
+                        <h4>Vermont Memory Game</h4>
+                        <p class="game-intro">Match pairs of Vermont landmarks and icons. How many can you find?</p>
+                        <div class="game-board" id="gameBoard"></div>
+                        <div class="game-stats">
+                            <span>Matches: <span id="matchCount">0</span>/6</span>
+                            <button class="btn btn-secondary btn-small" id="resetGameBtn" type="button">New Game</button>
                         </div>
-                        <div class="race-lane" id="lane2">
-                            <div class="syrup-stream amber-stream"></div>
-                            <span class="lane-label">Amber</span>
-                        </div>
-                        <div class="race-lane" id="lane3">
-                            <div class="syrup-stream dark-stream"></div>
-                            <span class="lane-label">Dark</span>
-                        </div>
-                        <div class="race-lane" id="lane4">
-                            <div class="syrup-stream very-dark-stream"></div>
-                            <span class="lane-label">Very Dark</span>
-                        </div>
-                    </div>
-                    <div class="racing-controls">
-                        <button class="race-btn" data-lane="1" type="button">Pick Golden 🍯</button>
-                        <button class="race-btn" data-lane="2" type="button">Pick Amber 🍯</button>
-                        <button class="race-btn" data-lane="3" type="button">Pick Dark 🍯</button>
-                        <button class="race-btn" data-lane="4" type="button">Pick Very Dark 🍯</button>
-                    </div>
-                </div>
-                <div class="racing-result" id="racingResult"></div>
-                <button class="btn btn-secondary btn-small" id="resetRaceBtn" type="button">Race Again</button>
-            </article>
+                    </article>
 
-            <article class="panel moose-deer-panel">
-                <h3>Moose vs Deer Rapid-Fire</h3>
-                <p class="game-intro">What do you see? Click as fast as you can!</p>
-                <div class="moose-deer-game">
-                    <div class="animal-display" id="animalDisplay">
-                        <img id="animalImage" src="" alt="Animal" class="animal-image">
-                    </div>
-                    <div class="animal-buttons">
-                        <button class="animal-btn" id="mooseBtn" type="button">Moose</button>
-                        <button class="animal-btn" id="deerBtn" type="button">Deer</button>
-                    </div>
-                </div>
-                <div class="animal-stats">
-                    <span>Score: <span id="animalScore">0</span></span>
-                    <span>Lives: <span id="animalLives">3</span></span>
-                    <span>Streak: <span id="animalStreak">0</span></span>
-                    <span>Time: <span id="animalTimer">60</span>s</span>
-                </div>
-                <button class="btn btn-secondary btn-small" id="startAnimalBtn" type="button">Start Game</button>
-                <button class="btn btn-secondary btn-small" id="resetAnimalBtn" type="button" style="display:none;">Play Again</button>
-            </article>
+                    <article class="game-panel ben-jerrys-panel" id="gamePanelFlavor" data-game-panel="flavor" role="tabpanel" aria-labelledby="gameTabFlavor" hidden>
+                        <h4>Ben & Jerry's Flavor Quiz</h4>
+                        <p class="game-intro">Match iconic Ben & Jerry's flavors with their descriptions. How many do you know?</p>
+                        <div class="ben-jerrys-game">
+                            <div class="flavor-list" id="flavorList"></div>
+                            <div class="flavor-description-list" id="flavorDescriptionList"></div>
+                        </div>
+                        <div class="ben-jerrys-stats">
+                            <span>Flavors Matched: <span id="flavorMatchCount">0</span>/8</span>
+                            <button class="btn btn-secondary btn-small" id="resetFlavorBtn" type="button">New Quiz</button>
+                        </div>
+                    </article>
 
-            <article class="panel maple-math-panel">
-                <h3>Maple Math Challenge</h3>
-                <p class="game-intro">Solve Vermont-themed math equations. Quick thinking required!</p>
-                <div class="maple-math-game">
-                    <div class="equation-display" id="equationDisplay"></div>
-                    <div class="math-input-group">
-                        <input type="number" id="mathAnswer" placeholder="Enter your answer" step="any">
-                        <button class="btn btn-primary btn-small" id="submitMathBtn" type="button">Check</button>
-                    </div>
+                    <article class="game-panel maple-racing-panel" id="gamePanelRace" data-game-panel="race" role="tabpanel" aria-labelledby="gameTabRace" hidden>
+                        <h4>Maple Syrup Racing</h4>
+                        <p class="game-intro">Pick your maple syrup and watch them race! Who will finish first?</p>
+                        <div class="maple-racing-game">
+                            <div class="race-container">
+                                <div class="race-lane" id="lane1">
+                                    <div class="syrup-stream golden-stream"></div>
+                                    <span class="lane-label">Golden</span>
+                                </div>
+                                <div class="race-lane" id="lane2">
+                                    <div class="syrup-stream amber-stream"></div>
+                                    <span class="lane-label">Amber</span>
+                                </div>
+                                <div class="race-lane" id="lane3">
+                                    <div class="syrup-stream dark-stream"></div>
+                                    <span class="lane-label">Dark</span>
+                                </div>
+                                <div class="race-lane" id="lane4">
+                                    <div class="syrup-stream very-dark-stream"></div>
+                                    <span class="lane-label">Very Dark</span>
+                                </div>
+                            </div>
+                            <div class="racing-controls">
+                                <button class="race-btn" data-lane="1" type="button">Pick Golden 🍯</button>
+                                <button class="race-btn" data-lane="2" type="button">Pick Amber 🍯</button>
+                                <button class="race-btn" data-lane="3" type="button">Pick Dark 🍯</button>
+                                <button class="race-btn" data-lane="4" type="button">Pick Very Dark 🍯</button>
+                            </div>
+                        </div>
+                        <div class="race-footer">
+                            <div class="racing-result" id="racingResult"></div>
+                            <button class="btn btn-secondary btn-small" id="resetRaceBtn" type="button">Race Again</button>
+                        </div>
+                    </article>
+
+                    <article class="game-panel moose-deer-panel" id="gamePanelAnimal" data-game-panel="animal" role="tabpanel" aria-labelledby="gameTabAnimal" hidden>
+                        <h4>Moose vs Deer Rapid-Fire</h4>
+                        <p class="game-intro">What do you see? Click as fast as you can!</p>
+                        <div class="moose-deer-game">
+                            <div class="animal-display" id="animalDisplay">
+                                <div class="animal-round-indicator" id="animalRoundIndicator" aria-live="polite">Round 0</div>
+                                <img id="animalImage" src="" alt="Animal" class="animal-image">
+                                <button class="btn btn-secondary btn-small" id="startAnimalBtn" type="button">Start Game</button>
+                            </div>
+                            <div class="animal-buttons">
+                                <button class="animal-btn" id="mooseBtn" type="button">Moose</button>
+                                <button class="animal-btn" id="deerBtn" type="button">Deer</button>
+                            </div>
+                        </div>
+                        <div class="animal-stats">
+                            <span>Score: <span id="animalScore">0</span></span>
+                            <span>Lives: <span id="animalLives">3</span></span>
+                            <span>Streak: <span id="animalStreak">0</span></span>
+                            <span>Time: <span id="animalTimer">60</span>s</span>
+                        </div>
+                    </article>
+
+                    <article class="game-panel maple-math-panel" id="gamePanelMath" data-game-panel="math" role="tabpanel" aria-labelledby="gameTabMath" hidden>
+                        <h4>Maple Math Challenge</h4>
+                        <p class="game-intro">Vermont is known for its MathCounts team, which I was a member of. Test out your mental math with this fun game!</p>
+                        <div class="maple-math-game">
+                            <div class="equation-display" id="equationDisplay">
+                                <div class="equation-text" id="equationText" aria-live="polite"></div>
+                                <button class="btn btn-secondary btn-small" id="startMathBtn" type="button">Start Challenge</button>
+                            </div>
+                            <div class="math-input-group">
+                                <input type="number" id="mathAnswer" step="any">
+                            </div>
+                        </div>
+                        <div class="math-stats">
+                            <span>Score: <span id="mathScore">0</span></span>
+                            <span>Streak: <span id="mathStreak">0</span></span>
+                            <span>Time: <span class="math-time-value"><span id="mathTimer">45</span>s</span></span>
+                        </div>
+                    </article>
                 </div>
-                <div class="math-stats">
-                    <span>Score: <span id="mathScore">0</span></span>
-                    <span>Streak: <span id="mathStreak">0</span></span>
-                    <span>Time: <span id="mathTimer">45</span>s</span>
-                </div>
-                <button class="btn btn-secondary btn-small" id="startMathBtn" type="button">Start Challenge</button>
-                <button class="btn btn-secondary btn-small" id="resetMathBtn" type="button" style="display:none;">Try Again</button>
+
             </article>
 
             <article class="panel fact-lab">
