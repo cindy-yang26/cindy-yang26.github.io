@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1400" role="img" aria-label="Subtle Vermont landscape board with forests and mountains">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d9e8f1"/>
+      <stop offset="0.42" stop-color="#e8f2f7"/>
+      <stop offset="1" stop-color="#edf0e7"/>
+    </linearGradient>
+    <linearGradient id="mountainsFar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9fb0a7"/>
+      <stop offset="1" stop-color="#899b93"/>
+    </linearGradient>
+    <linearGradient id="mountainsNear" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7f948a"/>
+      <stop offset="1" stop-color="#6c8177"/>
+    </linearGradient>
+    <pattern id="trees" width="46" height="62" patternUnits="userSpaceOnUse">
+      <path d="M23 10L13 28H33Z" fill="#5f7d67" opacity="0.42"/>
+      <rect x="21" y="28" width="4" height="8" fill="#5f7d67" opacity="0.42"/>
+      <path d="M8 32L1 45H15Z" fill="#6f8f76" opacity="0.36"/>
+      <rect x="7" y="45" width="2" height="5" fill="#6f8f76" opacity="0.36"/>
+      <path d="M38 34L31 46H45Z" fill="#57735f" opacity="0.34"/>
+      <rect x="37" y="46" width="2" height="5" fill="#57735f" opacity="0.34"/>
+    </pattern>
+  </defs>
+
+  <rect width="1000" height="1400" fill="url(#sky)"/>
+
+  <path d="M0 410L85 360L170 386L265 337L355 372L430 336L522 375L612 332L702 381L803 341L1000 430V680H0Z" fill="url(#mountainsFar)" opacity="0.5"/>
+  <path d="M0 510L102 432L197 471L298 418L397 457L494 404L595 462L700 416L804 462L900 435L1000 514V835H0Z" fill="url(#mountainsNear)" opacity="0.55"/>
+
+  <rect x="0" y="730" width="1000" height="670" fill="url(#trees)" opacity="0.55"/>
+
+</svg>

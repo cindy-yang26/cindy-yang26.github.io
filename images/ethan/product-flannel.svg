@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Flannel pickup">
+  <rect x="4" y="4" width="92" height="92" rx="18" fill="#b2483d"/>
+  <path d="M30 18L41 25L50 19L59 25L70 18L84 35L73 43V84C73 87 71 89 68 89H32C29 89 27 87 27 84V43L16 35Z" fill="#9f3b31" stroke="#6f2721" stroke-width="2"/>
+  <path d="M27 54H73M27 67H73M40 24V89M60 24V89" stroke="#efc6bf" stroke-width="3" opacity="0.75"/>
+  <path d="M41 25L50 34L59 25" fill="#ead8ca"/>
+</svg>

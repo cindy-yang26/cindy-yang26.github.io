@@ -30,23 +30,31 @@ const gradeButtons = document.querySelectorAll(".grade-btn");
 const raceButtons = document.querySelectorAll(".race-btn");
 const resetRaceBtn = document.getElementById("resetRaceBtn");
 const racingResult = document.getElementById("racingResult");
+const animalDisplay = document.getElementById("animalDisplay");
 const animalImage = document.getElementById("animalImage");
+const animalRoundIndicator = document.getElementById("animalRoundIndicator");
 const mooseBtn = document.getElementById("mooseBtn");
 const deerBtn = document.getElementById("deerBtn");
 const startAnimalBtn = document.getElementById("startAnimalBtn");
-const resetAnimalBtn = document.getElementById("resetAnimalBtn");
 const animalScore = document.getElementById("animalScore");
 const animalLives = document.getElementById("animalLives");
 const animalStreak = document.getElementById("animalStreak");
 const animalTimer = document.getElementById("animalTimer");
 const equationDisplay = document.getElementById("equationDisplay");
+const equationText = document.getElementById("equationText");
 const mathAnswer = document.getElementById("mathAnswer");
-const submitMathBtn = document.getElementById("submitMathBtn");
 const startMathBtn = document.getElementById("startMathBtn");
-const resetMathBtn = document.getElementById("resetMathBtn");
 const mathScore = document.getElementById("mathScore");
 const mathStreak = document.getElementById("mathStreak");
 const mathTimer = document.getElementById("mathTimer");
+const ethanPanel = document.getElementById("gamePanelEthan");
+const trainBoard = document.getElementById("trainBoard");
+const startTrainBtn = document.getElementById("startTrainBtn");
+const trainScore = document.getElementById("trainScore");
+const trainLength = document.getElementById("trainLength");
+const trainProduct = document.getElementById("trainProduct");
+const gameTabs = document.querySelectorAll(".game-tab");
+const gamePanels = document.querySelectorAll(".game-panel");
 const availableModes = [...new Set(Array.from(easterTargets, (el) => el.dataset.mode).filter(Boolean))];
 
 let toastTimer;
@@ -342,6 +350,27 @@ if (resetFlavorBtn) {
 // Maple Syrup Racing Game Functions
 let raceInProgress = false;
 let playerChoice = null;
+let raceAnimationFrameId = null;
+let raceLaneStates = [];
+
+function buildLaneState() {
+    return {
+        progress: 0,
+        velocity: 16 + Math.random() * 5, // % per second
+        acceleration: (Math.random() - 0.5) * 2,
+        phaseMsLeft: 350 + Math.random() * 700
+    };
+}
+
+function setRacingResult(message = "", statusClass = "") {
+    if (!racingResult) {
+        return;
+    }
+
+    racingResult.textContent = message;
+    racingResult.className = `racing-result${statusClass ? ` ${statusClass}` : ""}`;
+    racingResult.hidden = message.trim().length === 0;
+}
 
 // Moose vs Deer Game Data
 const animalImages = [
@@ -363,6 +392,7 @@ let animalTimeRemaining = 60;
 let animalTimerInterval = null;
 let currentAnimal = null;
 let animalGameTimer = null;
+let animalRoundCount = 0;
 
 // Maple Math Challenge Data - Simple arithmetic questions
 const mathProblems = [
@@ -406,12 +436,486 @@ let mathTimeRemaining = 45;
 let mathTimerInterval = null;
 let currentProblem = null;
 let usedProblems = [];
+let mathAdvancePending = false;
+let currentGameIndex = 0;
+
+const trainBoardWidth = 14;
+const trainBoardHeight = 14;
+const trainStartSpeedMs = 240;
+const trainMinSpeedMs = 95;
+const trainSpeedStepMs = 4;
+const trainSpeedRampTicks = 10;
+const trainProducts = [
+    { name: "Syrup", className: "product-syrup" },
+    { name: "Cheese", className: "product-cheese" },
+    { name: "Apple", className: "product-apple" },
+    { name: "Flannel", className: "product-flannel" },
+    { name: "Ski", className: "product-ski" },
+    { name: "Berries", className: "product-berries" },
+];
+
+let trainCells = [];
+let trainRoute = [];
+let trainDirection = { x: 1, y: 0 };
+let trainNextDirection = { x: 1, y: 0 };
+let activeTrainProduct = null;
+let activeTrainProductIndex = -1;
+let trainGameTimer = null;
+let trainGameActive = false;
+let trainCurrentScore = 0;
+let lastTrainProductClass = "";
+let trainCurrentSpeedMs = trainStartSpeedMs;
+let trainTickCount = 0;
+let trainCrashTimer = null;
+
+function getTrainHeadingClass(direction) {
+    if (direction.x === 1) {
+        return "train-heading-right";
+    }
+
+    if (direction.x === -1) {
+        return "train-heading-left";
+    }
+
+    if (direction.y === 1) {
+        return "train-heading-down";
+    }
+
+    return "train-heading-up";
+}
+
+function getTrainIndex(x, y) {
+    return y * trainBoardWidth + x;
+}
+
+function setTrainOverlayVisible(isVisible) {
+    if (!trainBoard) {
+        return;
+    }
+
+    trainBoard.classList.toggle("overlay-active", isVisible);
+}
+
+function triggerTrainCrashEffect() {
+    if (!trainBoard) {
+        return;
+    }
+
+    if (trainCrashTimer) {
+        clearTimeout(trainCrashTimer);
+        trainCrashTimer = null;
+    }
+
+    trainBoard.classList.remove("crash-state");
+    // Force reflow so the animation always restarts on repeated crashes.
+    void trainBoard.offsetWidth;
+    trainBoard.classList.add("crash-state");
+
+    trainCrashTimer = setTimeout(() => {
+        if (trainBoard) {
+            trainBoard.classList.remove("crash-state");
+        }
+        trainCrashTimer = null;
+    }, 760);
+}
+
+function buildTrainBoard() {
+    if (!trainBoard) {
+        return;
+    }
+
+    const existingGrid = trainBoard.querySelector(".train-grid");
+    if (existingGrid) {
+        existingGrid.remove();
+    }
+
+    const grid = document.createElement("div");
+    grid.className = "train-grid";
+    const totalCells = trainBoardWidth * trainBoardHeight;
+    trainCells = [];
+
+    for (let index = 0; index < totalCells; index += 1) {
+        const cell = document.createElement("div");
+        cell.className = "train-cell";
+        trainCells.push(cell);
+        grid.appendChild(cell);
+    }
+
+    trainBoard.prepend(grid);
+}
+
+function clearTrainTimer() {
+    if (trainGameTimer) {
+        clearInterval(trainGameTimer);
+        trainGameTimer = null;
+    }
+}
+
+function restartTrainTimer() {
+    if (!trainGameActive) {
+        return;
+    }
+
+    clearTrainTimer();
+    trainGameTimer = setInterval(stepTrainGame, trainCurrentSpeedMs);
+}
+
+function getRandomTrainProduct() {
+    const productPool = trainProducts.filter((item) => item.className !== lastTrainProductClass);
+    const pool = productPool.length > 0 ? productPool : trainProducts;
+    return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function placeTrainProduct() {
+    const occupied = new Set(trainRoute.map((segment) => getTrainIndex(segment.x, segment.y)));
+    const openIndexes = [];
+
+    for (let y = 0; y < trainBoardHeight; y += 1) {
+        for (let x = 0; x < trainBoardWidth; x += 1) {
+            const index = getTrainIndex(x, y);
+            if (!occupied.has(index)) {
+                openIndexes.push(index);
+            }
+        }
+    }
+
+    if (openIndexes.length === 0) {
+        activeTrainProductIndex = -1;
+        activeTrainProduct = null;
+        return;
+    }
+
+    activeTrainProductIndex = openIndexes[Math.floor(Math.random() * openIndexes.length)];
+    activeTrainProduct = getRandomTrainProduct();
+    lastTrainProductClass = activeTrainProduct.className;
+
+    if (trainProduct && activeTrainProduct) {
+        trainProduct.textContent = activeTrainProduct.name;
+    }
+}
+
+function renderTrainBoard() {
+    if (!trainCells.length) {
+        return;
+    }
+
+    trainCells.forEach((cell) => {
+        cell.className = "train-cell";
+    });
+
+    trainRoute.forEach((segment, index) => {
+        const segmentIndex = getTrainIndex(segment.x, segment.y);
+        const cell = trainCells[segmentIndex];
+        if (!cell) {
+            return;
+        }
+
+        if (index === 0) {
+            cell.classList.add("train-locomotive", getTrainHeadingClass(trainDirection));
+        } else {
+            const previousSegment = trainRoute[index - 1];
+            const segmentDirection = {
+                x: Math.sign(previousSegment.x - segment.x),
+                y: Math.sign(previousSegment.y - segment.y),
+            };
+            cell.classList.add("train-track", getTrainHeadingClass(segmentDirection));
+        }
+    });
+
+    if (activeTrainProductIndex >= 0 && activeTrainProduct) {
+        const pickupCell = trainCells[activeTrainProductIndex];
+        if (pickupCell) {
+            pickupCell.classList.add("train-product", activeTrainProduct.className);
+        }
+    }
+
+    if (trainScore) {
+        trainScore.textContent = String(trainCurrentScore);
+    }
+
+    if (trainLength) {
+        trainLength.textContent = String(trainRoute.length);
+    }
+}
+
+function setupTrainRoute() {
+    trainRoute = [
+        { x: 7, y: 6 },
+        { x: 6, y: 6 },
+        { x: 5, y: 6 },
+    ];
+    trainDirection = { x: 1, y: 0 };
+    trainNextDirection = { x: 1, y: 0 };
+    trainCurrentScore = 0;
+    trainGameActive = false;
+    lastTrainProductClass = "";
+    trainCurrentSpeedMs = trainStartSpeedMs;
+    trainTickCount = 0;
+
+    clearTrainTimer();
+
+    if (trainCrashTimer) {
+        clearTimeout(trainCrashTimer);
+        trainCrashTimer = null;
+    }
+
+    if (trainBoard) {
+        trainBoard.classList.remove("crash-state");
+    }
+
+    if (startTrainBtn) {
+        startTrainBtn.textContent = "Start Run";
+        startTrainBtn.style.display = "inline-block";
+    }
+    setTrainOverlayVisible(true);
+
+    placeTrainProduct();
+    renderTrainBoard();
+}
+
+function endTrainGame(reasonMessage = "Route ended.", isCrash = false) {
+    trainGameActive = false;
+    clearTrainTimer();
+
+    if (isCrash) {
+        triggerTrainCrashEffect();
+    }
+
+    if (startTrainBtn) {
+        startTrainBtn.textContent = "Play Again";
+        startTrainBtn.style.display = "inline-block";
+    }
+    setTrainOverlayVisible(true);
+
+    showToast(`${reasonMessage} Stops made: ${trainCurrentScore}`);
+}
+
+function stepTrainGame() {
+    if (!trainGameActive || trainRoute.length === 0) {
+        return;
+    }
+
+    trainDirection = { ...trainNextDirection };
+    trainTickCount += 1;
+
+    if (trainTickCount % trainSpeedRampTicks === 0 && trainCurrentSpeedMs > trainMinSpeedMs) {
+        const nextSpeed = Math.max(trainMinSpeedMs, trainCurrentSpeedMs - trainSpeedStepMs);
+        if (nextSpeed !== trainCurrentSpeedMs) {
+            trainCurrentSpeedMs = nextSpeed;
+            restartTrainTimer();
+        }
+    }
+
+    const head = trainRoute[0];
+    const nextHead = {
+        x: head.x + trainDirection.x,
+        y: head.y + trainDirection.y,
+    };
+
+    const outOfBounds =
+        nextHead.x < 0 ||
+        nextHead.x >= trainBoardWidth ||
+        nextHead.y < 0 ||
+        nextHead.y >= trainBoardHeight;
+
+    if (outOfBounds) {
+        endTrainGame("The Ethan Allen Express hit the Vermont border.", true);
+        return;
+    }
+
+    const hitsBody = trainRoute.some((segment) => segment.x === nextHead.x && segment.y === nextHead.y);
+    if (hitsBody) {
+        endTrainGame("The Ethan Allen Express crashed into itself.", true);
+        return;
+    }
+
+    trainRoute.unshift(nextHead);
+    const nextHeadIndex = getTrainIndex(nextHead.x, nextHead.y);
+
+    if (nextHeadIndex === activeTrainProductIndex) {
+        trainCurrentScore += 1;
+        if (activeTrainProduct) {
+            showToast(`Picked up ${activeTrainProduct.name}. Keep rolling.`);
+        }
+        placeTrainProduct();
+    } else {
+        trainRoute.pop();
+    }
+
+    renderTrainBoard();
+}
+
+function updateTrainDirection(directionKey) {
+    const nextDirections = {
+        up: { x: 0, y: -1 },
+        down: { x: 0, y: 1 },
+        left: { x: -1, y: 0 },
+        right: { x: 1, y: 0 },
+    };
+
+    const candidate = nextDirections[directionKey];
+    if (!candidate) {
+        return;
+    }
+
+    const reversingX = candidate.x !== 0 && candidate.x === -trainDirection.x;
+    const reversingY = candidate.y !== 0 && candidate.y === -trainDirection.y;
+    if (reversingX || reversingY) {
+        return;
+    }
+
+    trainNextDirection = candidate;
+}
+
+function startTrainGame() {
+    if (!trainCells.length) {
+        return;
+    }
+
+    trainGameActive = true;
+    clearTrainTimer();
+    trainGameTimer = setInterval(stepTrainGame, trainCurrentSpeedMs);
+
+    if (startTrainBtn) {
+        startTrainBtn.style.display = "none";
+    }
+    setTrainOverlayVisible(false);
+}
+
+function initializeTrainGame() {
+    if (!trainBoard || !startTrainBtn) {
+        return;
+    }
+
+    buildTrainBoard();
+    setupTrainRoute();
+
+    startTrainBtn.addEventListener("click", () => {
+        if (trainGameActive) {
+            return;
+        }
+
+        // A completed run starts fresh when clicking Play Again.
+        if (startTrainBtn.textContent === "Play Again") {
+            setupTrainRoute();
+        }
+
+        startTrainGame();
+    });
+
+    document.addEventListener("keydown", (event) => {
+        const keyToDirection = {
+            ArrowUp: "up",
+            ArrowDown: "down",
+            ArrowLeft: "left",
+            ArrowRight: "right",
+            w: "up",
+            W: "up",
+            s: "down",
+            S: "down",
+            a: "left",
+            A: "left",
+            d: "right",
+            D: "right",
+        };
+
+        if (!ethanPanel || ethanPanel.hidden) {
+            return;
+        }
+
+        const target = event.target;
+        if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
+            return;
+        }
+
+        const directionKey = keyToDirection[event.key];
+        if (!directionKey) {
+            return;
+        }
+
+        event.preventDefault();
+
+        if (!trainGameActive) {
+            if (startTrainBtn && startTrainBtn.textContent === "Resume Run") {
+                startTrainGame();
+            } else {
+                return;
+            }
+        }
+
+        updateTrainDirection(directionKey);
+    });
+}
+
+function showGamePanelByIndex(index, moveFocus = false) {
+    if (gameTabs.length === 0 || gamePanels.length === 0) {
+        return;
+    }
+
+    const safeIndex = (index + gameTabs.length) % gameTabs.length;
+    currentGameIndex = safeIndex;
+    const targetKey = gameTabs[safeIndex].dataset.gameTarget;
+
+    gameTabs.forEach((tab, tabIndex) => {
+        const isActive = tabIndex === safeIndex;
+        tab.classList.toggle("active", isActive);
+        tab.setAttribute("aria-selected", String(isActive));
+
+        if (moveFocus && isActive) {
+            tab.focus();
+        }
+    });
+
+    gamePanels.forEach((panel) => {
+        const isActive = panel.dataset.gamePanel === targetKey;
+        panel.classList.toggle("active", isActive);
+        panel.hidden = !isActive;
+    });
+
+    if (targetKey !== "ethan" && trainGameActive) {
+        trainGameActive = false;
+        clearTrainTimer();
+
+        if (startTrainBtn) {
+            startTrainBtn.textContent = "Resume Run";
+            startTrainBtn.style.display = "inline-block";
+        }
+        setTrainOverlayVisible(true);
+    }
+
+}
+
+function initializeGameSwitcher() {
+    if (gameTabs.length === 0 || gamePanels.length === 0) {
+        return;
+    }
+
+    gameTabs.forEach((tab, tabIndex) => {
+        tab.addEventListener("click", () => {
+            showGamePanelByIndex(tabIndex);
+        });
+
+        tab.addEventListener("keydown", (event) => {
+            if (event.key === "ArrowRight") {
+                event.preventDefault();
+                showGamePanelByIndex(tabIndex + 1, true);
+            }
+
+            if (event.key === "ArrowLeft") {
+                event.preventDefault();
+                showGamePanelByIndex(tabIndex - 1, true);
+            }
+        });
+    });
+
+    showGamePanelByIndex(0);
+}
 function startRace(chosenLane) {
     if (raceInProgress) return;
     
     raceInProgress = true;
     playerChoice = chosenLane;
-    racingResult.textContent = "";
+    setRacingResult();
     raceButtons.forEach(btn => btn.disabled = true);
     
     // Reset all syrup streams to starting position
@@ -419,59 +923,103 @@ function startRace(chosenLane) {
     streams.forEach(stream => {
         stream.style.width = "0%";
     });
-    
-    // Simulate random race speeds for each lane
-    const raceSpeeds = [
-        Math.random() * 3000 + 2000,  // Golden
-        Math.random() * 3000 + 2000,  // Amber
-        Math.random() * 3000 + 2000,  // Dark
-        Math.random() * 3000 + 2000   // Very Dark
-    ];
-    
-    const minSpeed = Math.min(...raceSpeeds);
-    const winner = raceSpeeds.indexOf(minSpeed) + 1;
-    
-    // Animate all streams racing
-    const startTime = Date.now();
-    
-    const animateRace = () => {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / minSpeed, 1);
-        
-        streams.forEach((stream, index) => {
-            const streamSpeed = raceSpeeds[index];
-            const streamProgress = Math.min(elapsed / streamSpeed, 1);
-            stream.style.width = (streamProgress * 100) + "%";
-        });
-        
-        if (progress < 1) {
-            requestAnimationFrame(animateRace);
-        } else {
-            // Race finished
-            finishRace(winner);
+
+    raceLaneStates = Array.from(streams, () => buildLaneState());
+    let lastTimestamp = null;
+    let raceAgeSeconds = 0;
+
+    const animateRace = (timestamp) => {
+        if (!raceInProgress) {
+            return;
         }
+
+        if (lastTimestamp === null) {
+            lastTimestamp = timestamp;
+        }
+
+        const deltaSeconds = Math.min((timestamp - lastTimestamp) / 1000, 0.05);
+        lastTimestamp = timestamp;
+        raceAgeSeconds += deltaSeconds;
+        const avgProgress = raceLaneStates.reduce((sum, state) => sum + state.progress, 0) / raceLaneStates.length;
+        const avgVelocity = raceLaneStates.reduce((sum, state) => sum + state.velocity, 0) / raceLaneStates.length;
+        const leaderProgress = Math.max(...raceLaneStates.map((state) => state.progress));
+        let winnerIndex = -1;
+
+        streams.forEach((stream, index) => {
+            const laneState = raceLaneStates[index];
+            laneState.phaseMsLeft -= deltaSeconds * 1000;
+
+            if (laneState.phaseMsLeft <= 0) {
+                const trailingFactor = Math.max(0, (avgProgress - laneState.progress) / 100);
+                const leaderGapFactor = Math.max(0, (leaderProgress - laneState.progress) / 100);
+                const racePhaseBoost = laneState.progress > 45 ? 0.12 : 0;
+                const burstChance = 0.2 + trailingFactor * 0.45 + leaderGapFactor * 0.4 + racePhaseBoost;
+                const clampedBurstChance = Math.max(0.12, Math.min(0.9, burstChance));
+
+                if (Math.random() < clampedBurstChance) {
+                    laneState.acceleration = 1.8 + Math.random() * 5.2;
+                    laneState.phaseMsLeft = 280 + Math.random() * 560;
+                } else {
+                    laneState.acceleration = -2.8 + Math.random() * 2.2;
+                    laneState.phaseMsLeft = 420 + Math.random() * 900;
+                }
+            }
+
+            const finishFatigue = Math.max(0, laneState.progress - 75) * 0.08;
+            const randomDrift = (Math.random() - 0.5) * 2.4;
+            const isLeader = laneState.progress >= leaderProgress - 0.001;
+            const leaderPenalty = isLeader && raceAgeSeconds > 1 ? (0.4 + Math.random() * 0.9) : 0;
+            const comebackBoost = Math.max(0, (leaderProgress - laneState.progress - 8) * 0.06);
+
+            laneState.velocity += (laneState.acceleration + comebackBoost - leaderPenalty - finishFatigue + randomDrift) * deltaSeconds;
+
+            // Keep the opening pack tighter so early leads don't lock in outcomes.
+            if (raceAgeSeconds < 1.6) {
+                laneState.velocity += (avgVelocity - laneState.velocity) * 0.3 * deltaSeconds;
+            }
+
+            laneState.velocity = Math.max(8, Math.min(34, laneState.velocity));
+            laneState.progress = Math.min(100, laneState.progress + laneState.velocity * deltaSeconds);
+
+            stream.style.width = `${laneState.progress}%`;
+
+            if (laneState.progress >= 100 && winnerIndex === -1) {
+                winnerIndex = index;
+            }
+        });
+
+        if (winnerIndex !== -1) {
+            finishRace(winnerIndex + 1);
+            return;
+        }
+
+        raceAnimationFrameId = requestAnimationFrame(animateRace);
     };
-    
-    animateRace();
+
+    raceAnimationFrameId = requestAnimationFrame(animateRace);
 }
 
 function finishRace(winner) {
     raceInProgress = false;
+    if (raceAnimationFrameId !== null) {
+        cancelAnimationFrame(raceAnimationFrameId);
+        raceAnimationFrameId = null;
+    }
     const grades = ["Golden", "Amber", "Dark", "Very Dark"];
     const winnerGrade = grades[winner - 1];
     
     if (winner === parseInt(playerChoice)) {
-        racingResult.textContent = `🎉 You won! ${winnerGrade} syrup finished first!`;
-        racingResult.className = "racing-result winner";
+        setRacingResult(`🎉 You won! ${winnerGrade} syrup finished first!`, "winner");
         showToast(`You picked the winner! ${winnerGrade} syrup!`);
     } else {
-        racingResult.textContent = `${winnerGrade} syrup won! Better luck next time!`;
-        racingResult.className = "racing-result loser";
+        setRacingResult(`${winnerGrade} syrup won! Better luck next time!`, "loser");
         showToast(`${winnerGrade} syrup took it!`);
     }
     
     raceButtons.forEach(btn => btn.disabled = false);
 }
+
+setRacingResult();
 
 raceButtons.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -481,12 +1029,18 @@ raceButtons.forEach(btn => {
 
 if (resetRaceBtn) {
     resetRaceBtn.addEventListener("click", () => {
-        racingResult.textContent = "";
-        racingResult.className = "racing-result";
+        raceInProgress = false;
+        if (raceAnimationFrameId !== null) {
+            cancelAnimationFrame(raceAnimationFrameId);
+            raceAnimationFrameId = null;
+        }
+        setRacingResult();
+        raceLaneStates = [];
         const streams = document.querySelectorAll(".syrup-stream");
         streams.forEach(stream => {
             stream.style.width = "0%";
         });
+        raceButtons.forEach(btn => btn.disabled = false);
     });
 }
 
@@ -497,14 +1051,18 @@ function startAnimalGame() {
     animalCurrentScore = 0;
     animalCurrentStreak = 0;
     animalTimeRemaining = 60;
+    animalRoundCount = 0;
     
     animalScore.textContent = "0";
     animalLives.textContent = "3";
     animalStreak.textContent = "0";
     animalTimer.textContent = "60";
+    if (animalRoundIndicator) {
+        animalRoundIndicator.textContent = "Round 0";
+    }
     
+    startAnimalBtn.textContent = "Start Game";
     startAnimalBtn.style.display = "none";
-    resetAnimalBtn.style.display = "none";
     mooseBtn.disabled = false;
     deerBtn.disabled = false;
     
@@ -525,6 +1083,16 @@ function showNextAnimal() {
     if (!animalGameActive) return;
     
     currentAnimal = animalImages[Math.floor(Math.random() * animalImages.length)];
+    animalRoundCount++;
+    if (animalRoundIndicator) {
+        animalRoundIndicator.textContent = `Round ${animalRoundCount}`;
+    }
+    if (animalDisplay) {
+        animalDisplay.classList.remove("new-round");
+        // Force reflow so animation restarts even for consecutive rounds.
+        void animalDisplay.offsetWidth;
+        animalDisplay.classList.add("new-round");
+    }
     console.log("Showing animal:", currentAnimal);
     console.log("Image element:", animalImage);
     console.log("Setting src to:", currentAnimal.image);
@@ -565,8 +1133,13 @@ function endAnimalGame() {
     animalGameActive = false;
     mooseBtn.disabled = true;
     deerBtn.disabled = true;
+    if (animalDisplay) {
+        animalDisplay.classList.remove("new-round");
+    }
+    animalImage.src = "";
+    animalImage.alt = "Animal";
+    startAnimalBtn.textContent = "Play Again";
     startAnimalBtn.style.display = "inline-block";
-    resetAnimalBtn.style.display = "inline-block";
     
     // Clear the timer interval
     if (animalTimerInterval) {
@@ -584,17 +1157,21 @@ function startMathGame() {
     mathCurrentStreak = 0;
     mathTimeRemaining = 45;
     usedProblems = [];
+    mathAdvancePending = false;
     
     mathScore.textContent = "0";
     mathStreak.textContent = "0";
     mathTimer.textContent = "45";
     
+    startMathBtn.textContent = "Start Challenge";
     startMathBtn.style.display = "none";
-    resetMathBtn.style.display = "none";
     mathAnswer.disabled = false;
-    submitMathBtn.disabled = false;
     mathAnswer.value = "";
     mathAnswer.focus();
+
+    if (equationText) {
+        equationText.textContent = "";
+    }
     
     mathTimerInterval = setInterval(() => {
         mathTimeRemaining--;
@@ -610,6 +1187,7 @@ function startMathGame() {
 
 function showNextMathProblem() {
     if (!mathGameActive) return;
+    mathAdvancePending = false;
     
     // Reset used problems if we've gone through all of them
     if (usedProblems.length === mathProblems.length) {
@@ -626,49 +1204,72 @@ function showNextMathProblem() {
     currentProblem = mathProblems[randomIndex];
     
     // Display text
-    equationDisplay.textContent = currentProblem.text;
+    if (equationText) {
+        equationText.textContent = currentProblem.text;
+    } else if (equationDisplay) {
+        equationDisplay.textContent = currentProblem.text;
+    }
     
     mathAnswer.value = "";
     mathAnswer.focus();
 }
 
-function checkMathAnswer() {
+function checkMathAnswer(showFeedback = false) {
     if (!mathGameActive || !currentProblem) return;
-    
-    const userAnswer = parseFloat(mathAnswer.value);
-    
-    if (isNaN(userAnswer)) {
-        showToast("Please enter a number");
+
+    const inputValue = mathAnswer.value.trim();
+    if (inputValue.length === 0) {
         return;
     }
-    
+
+    const userAnswer = parseFloat(inputValue);
+
+    if (isNaN(userAnswer)) {
+        if (showFeedback) {
+            showToast("Please enter a number");
+        }
+        return;
+    }
+
     const difference = Math.abs(userAnswer - currentProblem.answer);
-    
+
     if (difference <= currentProblem.tolerance) {
+        if (mathAdvancePending) {
+            return;
+        }
+
+        mathAdvancePending = true;
         // Correct!
         mathCurrentScore++;
         mathCurrentStreak++;
         mathScore.textContent = mathCurrentScore;
         mathStreak.textContent = mathCurrentStreak;
-        
+
         showToast("✓ Correct!");
-        setTimeout(() => showNextMathProblem(), 500);
-    } else {
-        // Wrong!
+        setTimeout(() => showNextMathProblem(), 120);
+        return;
+    }
+
+    if (showFeedback) {
+        // Wrong answer feedback only when manually requested (Enter key)
         mathCurrentStreak = 0;
         mathStreak.textContent = "0";
-        
         showToast(`✗ Wrong! Answer: ${currentProblem.answer.toFixed(2)}`);
-        setTimeout(() => showNextMathProblem(), 1000);
+        setTimeout(() => showNextMathProblem(), 400);
     }
 }
 
 function endMathGame() {
     mathGameActive = false;
+    mathAdvancePending = false;
+    currentProblem = null;
     mathAnswer.disabled = true;
-    submitMathBtn.disabled = true;
+    startMathBtn.textContent = "Play Again";
     startMathBtn.style.display = "inline-block";
-    resetMathBtn.style.display = "inline-block";
+
+    if (equationText) {
+        equationText.textContent = "";
+    }
     
     if (mathTimerInterval) {
         clearInterval(mathTimerInterval);
@@ -694,27 +1295,16 @@ if (startMathBtn) {
     startMathBtn.addEventListener("click", startMathGame);
 }
 
-if (submitMathBtn) {
-    submitMathBtn.addEventListener("click", checkMathAnswer);
-}
-
 if (mathAnswer) {
+    mathAnswer.addEventListener("input", () => {
+        checkMathAnswer(false);
+    });
+
     mathAnswer.addEventListener("keypress", (e) => {
         if (e.key === "Enter") {
-            checkMathAnswer();
+            checkMathAnswer(true);
         }
     });
-}
-
-if (resetMathBtn) {
-    resetMathBtn.addEventListener("click", () => {
-        mathAnswer.value = "";
-        startMathGame();
-    });
-}
-
-if (resetAnimalBtn) {
-    resetAnimalBtn.addEventListener("click", startAnimalGame);
 }
 
 const placeDetails = {
@@ -778,7 +1368,11 @@ if ("IntersectionObserver" in window) {
                 }
             });
         },
-        { threshold: 0.2 }
+        {
+            // Keep reveals working even for very tall sections.
+            threshold: 0.01,
+            rootMargin: "0px 0px -8% 0px",
+        }
     );
 
     revealItems.forEach((item) => observer.observe(item));
@@ -883,6 +1477,7 @@ mapPins.forEach((pin) => {
 });
 
 initializeRandomMode();
+initializeGameSwitcher();
 
 if (factButton && factOutput) {
     factButton.addEventListener("click", () => {
@@ -913,3 +1508,4 @@ easterTargets.forEach((target) => {
 // Initialize the memory game
 initializeGame();
 initializeFlavorGame();
+initializeTrainGame();
