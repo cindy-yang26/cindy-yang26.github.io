@@ -216,6 +216,7 @@
                     <button class="game-tab" id="gameTabAnimal" data-game-target="animal" role="tab" aria-selected="false" aria-controls="gamePanelAnimal" type="button">Moose vs Deer</button>
                     <button class="game-tab" id="gameTabMath" data-game-target="math" role="tab" aria-selected="false" aria-controls="gamePanelMath" type="button">Maple Math</button>
                     <button class="game-tab" id="gameTabEthan" data-game-target="ethan" role="tab" aria-selected="false" aria-controls="gamePanelEthan" type="button">Ethan Allen Express</button>
+                    <button class="game-tab" id="gameTabSlots" data-game-target="slots" role="tab" aria-selected="false" aria-controls="gamePanelSlots" type="button">Green Mountain Slots</button>
                 </div>
 
                 <div class="game-panel-viewport">
@@ -331,6 +332,42 @@
                             <span>Train length: <span id="trainLength">3</span></span>
                             <span>Pickup: <span id="trainProduct">Syrup</span></span>
                             <span>Controls: Arrow keys or WASD</span>
+                        </div>
+                    </article>
+
+                    <article class="game-panel vermont-slots-panel" id="gamePanelSlots" data-game-panel="slots" role="tabpanel" aria-labelledby="gameTabSlots" hidden>
+                        <h4>Green Mountain Slots</h4>
+                        <p class="game-intro">Spin Vermont-themed reels, build streaks, and chase your best payout run.</p>
+                        <div class="slots-game">
+                            <div class="slots-machine" id="slotsMachine">
+                                <div class="slots-marquee" id="slotsStatus">Land 3 of a kind for a big Vermont payout.</div>
+                                <div class="slots-header">
+                                    <span>Credits: <strong id="slotsCredits">20</strong></span>
+                                    <span>Bet: <strong id="slotsBet">1</strong></span>
+                                    <span>Best Win: <strong id="slotsBestWin">0</strong></span>
+                                </div>
+
+                                <div class="slots-reels" id="slotsReels" aria-live="polite" aria-label="Slot machine reels">
+                                    <div class="slot-reel" id="slotReel1">🍁</div>
+                                    <div class="slot-reel" id="slotReel2">🍁</div>
+                                    <div class="slot-reel" id="slotReel3">🍁</div>
+                                    <div class="slots-bankrupt-screen" id="slotsBankruptScreen" hidden>
+                                        <p>Bankrupt. Hit Reset to play again.</p>
+                                    </div>
+                                </div>
+
+                                <div class="slots-controls">
+                                    <button class="btn btn-secondary btn-small" id="slotsBetDownBtn" type="button">Bet -</button>
+                                    <button class="btn btn-secondary btn-small" id="slotsBetUpBtn" type="button">Bet +</button>
+                                    <button class="btn btn-primary" id="slotsSpinBtn" type="button">Spin</button>
+                                    <button class="btn btn-secondary btn-small" id="slotsResetBtn" type="button">Reset</button>
+                                </div>
+                            </div>
+
+                            <div class="slots-footer">
+                                <span>Streak: <strong id="slotsStreak">0</strong></span>
+                                <span>Spins: <strong id="slotsSpinCount">0</strong></span>
+                            </div>
                         </div>
                     </article>
                 </div>
