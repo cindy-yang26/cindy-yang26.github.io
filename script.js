@@ -555,6 +555,7 @@ let slotBestSingleWin = 0;
 let slotCurrentStreak = 0;
 let slotSpinTotal = 0;
 let slotSpinLocked = false;
+let slotCrankPullTimer = null;
 
 function getTrainHeadingClass(direction) {
     if (direction.x === 1) {
@@ -1048,6 +1049,19 @@ function setSlotsStatus(message) {
     }
 }
 
+function alignSlotsCrankToReels() {
+    if (!slotsSpinBtn || !slotsReels || !slotsMachine || !slotsPanel || slotsPanel.hidden) {
+        return;
+    }
+
+    const machineRect = slotsMachine.getBoundingClientRect();
+    const reelsRect = slotsReels.getBoundingClientRect();
+    const reelsCenterY = reelsRect.top - machineRect.top + (reelsRect.height / 2);
+    const crankStyles = window.getComputedStyle(slotsSpinBtn);
+    const leverOffsetY = parseFloat(crankStyles.getPropertyValue("--lever-offset-y")) || 10;
+    slotsSpinBtn.style.top = `${reelsCenterY - leverOffsetY}px`;
+}
+
 function evaluateSlotResult(results) {
     const counts = results.reduce((acc, symbol) => {
         acc[symbol] = (acc[symbol] || 0) + 1;
@@ -1249,6 +1263,11 @@ function initializeSlotsGame() {
         return;
     }
 
+    alignSlotsCrankToReels();
+    window.addEventListener("resize", () => {
+        alignSlotsCrankToReels();
+    });
+
     if (slotsBetDownBtn) {
         slotsBetDownBtn.addEventListener("click", () => {
             if (slotSpinLocked || slotBetAmount <= 1) {
@@ -1274,6 +1293,26 @@ function initializeSlotsGame() {
 
     if (slotsSpinBtn) {
         slotsSpinBtn.addEventListener("click", () => {
+            if (slotSpinLocked || slotCredits < slotBetAmount) {
+                return;
+            }
+
+            slotsSpinBtn.classList.remove("is-pulling");
+            void slotsSpinBtn.offsetWidth;
+            slotsSpinBtn.classList.add("is-pulling");
+
+            if (slotCrankPullTimer) {
+                clearTimeout(slotCrankPullTimer);
+                slotCrankPullTimer = null;
+            }
+
+            slotCrankPullTimer = setTimeout(() => {
+                if (slotsSpinBtn) {
+                    slotsSpinBtn.classList.remove("is-pulling");
+                }
+                slotCrankPullTimer = null;
+            }, 500);
+
             spinSlots();
         });
     }
@@ -1285,6 +1324,7 @@ function initializeSlotsGame() {
     }
 
     resetSlotsGame();
+    alignSlotsCrankToReels();
 }
 
 function showGamePanelByIndex(index, moveFocus = false) {
@@ -1312,6 +1352,12 @@ function showGamePanelByIndex(index, moveFocus = false) {
         panel.classList.toggle("active", isActive);
         panel.hidden = !isActive;
     });
+
+    if (targetKey === "slots") {
+        requestAnimationFrame(() => {
+            alignSlotsCrankToReels();
+        });
+    }
 
     if (targetKey !== "ethan" && trainGameActive) {
         trainGameActive = false;
