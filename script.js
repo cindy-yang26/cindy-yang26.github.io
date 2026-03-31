@@ -71,6 +71,13 @@ const slotsBetDownBtn = document.getElementById("slotsBetDownBtn");
 const slotsBetUpBtn = document.getElementById("slotsBetUpBtn");
 const slotsSpinBtn = document.getElementById("slotsSpinBtn");
 const slotsResetBtn = document.getElementById("slotsResetBtn");
+const gamePrevBtn = document.getElementById("gamePrevBtn");
+const gameNextBtn = document.getElementById("gameNextBtn");
+const gamePickerToggle = document.getElementById("gamePickerToggle");
+const gamePickerMenu = document.getElementById("gamePickerMenu");
+const gamePickerCurrent = document.getElementById("gamePickerCurrent");
+const gamePickerCount = document.getElementById("gamePickerCount");
+const gamePickerAction = document.querySelector(".picker-action");
 const gameTabs = document.querySelectorAll(".game-tab");
 const gamePanels = document.querySelectorAll(".game-panel");
 const availableModes = [...new Set(Array.from(easterTargets, (el) => el.dataset.mode).filter(Boolean))];
@@ -456,6 +463,34 @@ let currentProblem = null;
 let usedProblems = [];
 let mathAdvancePending = false;
 let currentGameIndex = 0;
+
+function setGamePickerOpenState(isOpen) {
+    if (!gamePickerMenu || !gamePickerToggle) {
+        return;
+    }
+
+    gamePickerMenu.hidden = !isOpen;
+    gamePickerMenu.classList.toggle("open", isOpen);
+    gamePickerToggle.setAttribute("aria-expanded", String(isOpen));
+
+    if (gamePickerAction) {
+        gamePickerAction.textContent = isOpen ? "Hide list" : "Show all";
+    }
+}
+
+function closeGamePicker() {
+    setGamePickerOpenState(false);
+}
+
+function updateGamePickerMeta(index) {
+    if (!gamePickerCurrent || !gamePickerCount || gameTabs.length === 0) {
+        return;
+    }
+
+    const safeIndex = (index + gameTabs.length) % gameTabs.length;
+    gamePickerCurrent.textContent = gameTabs[safeIndex].textContent.trim();
+    gamePickerCount.textContent = `${safeIndex + 1} / ${gameTabs.length}`;
+}
 
 const trainBoardWidth = 14;
 const trainBoardHeight = 14;
@@ -1265,6 +1300,7 @@ function showGamePanelByIndex(index, moveFocus = false) {
         const isActive = tabIndex === safeIndex;
         tab.classList.toggle("active", isActive);
         tab.setAttribute("aria-selected", String(isActive));
+        tab.tabIndex = isActive ? 0 : -1;
 
         if (moveFocus && isActive) {
             tab.focus();
@@ -1288,6 +1324,7 @@ function showGamePanelByIndex(index, moveFocus = false) {
         setTrainOverlayVisible(true);
     }
 
+    updateGamePickerMeta(safeIndex);
 }
 
 function initializeGameSwitcher() {
@@ -1298,6 +1335,7 @@ function initializeGameSwitcher() {
     gameTabs.forEach((tab, tabIndex) => {
         tab.addEventListener("click", () => {
             showGamePanelByIndex(tabIndex);
+            closeGamePicker();
         });
 
         tab.addEventListener("keydown", (event) => {
@@ -1313,7 +1351,46 @@ function initializeGameSwitcher() {
         });
     });
 
+    if (gamePickerToggle && gamePickerMenu) {
+        gamePickerToggle.addEventListener("click", () => {
+            const isOpen = gamePickerToggle.getAttribute("aria-expanded") === "true";
+            setGamePickerOpenState(!isOpen);
+        });
+    }
+
+    if (gamePrevBtn) {
+        gamePrevBtn.addEventListener("click", () => {
+            showGamePanelByIndex(currentGameIndex - 1);
+        });
+    }
+
+    if (gameNextBtn) {
+        gameNextBtn.addEventListener("click", () => {
+            showGamePanelByIndex(currentGameIndex + 1);
+        });
+    }
+
+    document.addEventListener("click", (event) => {
+        if (!gamePickerMenu || !gamePickerToggle || gamePickerMenu.hidden) {
+            return;
+        }
+
+        const target = event.target;
+        if (target instanceof Node && (gamePickerMenu.contains(target) || gamePickerToggle.contains(target))) {
+            return;
+        }
+
+        closeGamePicker();
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            closeGamePicker();
+        }
+    });
+
     showGamePanelByIndex(0);
+    closeGamePicker();
 }
 function startRace(chosenLane) {
     if (raceInProgress) return;

@@ -209,14 +209,27 @@
                     <p class="game-intro">One game at a time to keep this section compact. Switch anytime.</p>
                 </div>
 
-                <div class="game-switcher" role="tablist" aria-label="Vermont games">
-                    <button class="game-tab active" id="gameTabMemory" data-game-target="memory" role="tab" aria-selected="true" aria-controls="gamePanelMemory" type="button">Memory</button>
-                    <button class="game-tab" id="gameTabFlavor" data-game-target="flavor" role="tab" aria-selected="false" aria-controls="gamePanelFlavor" type="button">B&amp;J Flavor Quiz</button>
-                    <button class="game-tab" id="gameTabRace" data-game-target="race" role="tab" aria-selected="false" aria-controls="gamePanelRace" type="button">Syrup Racing</button>
-                    <button class="game-tab" id="gameTabAnimal" data-game-target="animal" role="tab" aria-selected="false" aria-controls="gamePanelAnimal" type="button">Moose vs Deer</button>
-                    <button class="game-tab" id="gameTabMath" data-game-target="math" role="tab" aria-selected="false" aria-controls="gamePanelMath" type="button">Maple Math</button>
-                    <button class="game-tab" id="gameTabEthan" data-game-target="ethan" role="tab" aria-selected="false" aria-controls="gamePanelEthan" type="button">Ethan Allen Express</button>
-                    <button class="game-tab" id="gameTabSlots" data-game-target="slots" role="tab" aria-selected="false" aria-controls="gamePanelSlots" type="button">Green Mountain Slots</button>
+                <div class="game-switcher-wrap">
+                    <div class="game-switcher-controls" aria-label="Vermont game picker">
+                        <button class="game-nav-btn" id="gamePrevBtn" type="button" aria-label="Previous game">&larr;</button>
+                        <button class="game-picker-toggle" id="gamePickerToggle" type="button" aria-expanded="false" aria-controls="gamePickerMenu">
+                            <span class="picker-kicker">Now Playing</span>
+                            <span class="picker-title" id="gamePickerCurrent">Memory</span>
+                            <span class="picker-count" id="gamePickerCount">1 / 7</span>
+                            <span class="picker-action">Show all</span>
+                        </button>
+                        <button class="game-nav-btn" id="gameNextBtn" type="button" aria-label="Next game">&rarr;</button>
+                    </div>
+
+                    <div class="game-switcher" id="gamePickerMenu" role="tablist" aria-label="Vermont games" hidden>
+                        <button class="game-tab active" id="gameTabMemory" data-game-target="memory" role="tab" aria-selected="true" aria-controls="gamePanelMemory" type="button">Memory</button>
+                        <button class="game-tab" id="gameTabFlavor" data-game-target="flavor" role="tab" aria-selected="false" aria-controls="gamePanelFlavor" type="button">B&amp;J Flavor Quiz</button>
+                        <button class="game-tab" id="gameTabRace" data-game-target="race" role="tab" aria-selected="false" aria-controls="gamePanelRace" type="button">Syrup Racing</button>
+                        <button class="game-tab" id="gameTabAnimal" data-game-target="animal" role="tab" aria-selected="false" aria-controls="gamePanelAnimal" type="button">Moose vs Deer</button>
+                        <button class="game-tab" id="gameTabMath" data-game-target="math" role="tab" aria-selected="false" aria-controls="gamePanelMath" type="button">Maple Math</button>
+                        <button class="game-tab" id="gameTabEthan" data-game-target="ethan" role="tab" aria-selected="false" aria-controls="gamePanelEthan" type="button">Ethan Allen Express</button>
+                        <button class="game-tab" id="gameTabSlots" data-game-target="slots" role="tab" aria-selected="false" aria-controls="gamePanelSlots" type="button">Green Mountain Slots</button>
+                    </div>
                 </div>
 
                 <div class="game-panel-viewport">
