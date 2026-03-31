@@ -1095,6 +1095,7 @@ h3 {
     overflow: hidden;
     padding: 0.85rem;
     position: relative;
+    touch-action: none;
     height: min(62vh, 680px);
     width: min(62vh, 680px);
     max-width: 100%;

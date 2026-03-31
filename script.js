@@ -53,6 +53,7 @@ const startTrainBtn = document.getElementById("startTrainBtn");
 const trainScore = document.getElementById("trainScore");
 const trainLength = document.getElementById("trainLength");
 const trainProduct = document.getElementById("trainProduct");
+const trainControlHint = document.getElementById("trainControlHint");
 const slotsPanel = document.getElementById("gamePanelSlots");
 const slotsMachine = document.getElementById("slotsMachine");
 const slotsReels = document.getElementById("slotsReels");
@@ -484,6 +485,22 @@ let lastTrainProductClass = "";
 let trainCurrentSpeedMs = trainStartSpeedMs;
 let trainTickCount = 0;
 let trainCrashTimer = null;
+let trainTouchStartX = 0;
+let trainTouchStartY = 0;
+
+function isMobileControlMode() {
+    return window.matchMedia("(pointer: coarse)").matches || window.matchMedia("(hover: none)").matches;
+}
+
+function updateTrainControlHintText() {
+    if (!trainControlHint) {
+        return;
+    }
+
+    trainControlHint.textContent = isMobileControlMode()
+        ? "Controls: Swipe"
+        : "Controls: Arrow keys or WASD";
+}
 
 const slotSymbols = ["🍁", "🐄", "🧀", "⛰️", "🚂", "🫐", "⛷️"];
 const slotWeights = [24, 18, 16, 14, 10, 12, 6];
@@ -825,6 +842,7 @@ function initializeTrainGame() {
 
     buildTrainBoard();
     setupTrainRoute();
+    updateTrainControlHintText();
 
     startTrainBtn.addEventListener("click", () => {
         if (trainGameActive) {
@@ -839,7 +857,52 @@ function initializeTrainGame() {
         startTrainGame();
     });
 
+    window.addEventListener("resize", updateTrainControlHintText);
+
+    trainBoard.addEventListener("touchstart", (event) => {
+        if (!isMobileControlMode() || !ethanPanel || ethanPanel.hidden || event.touches.length === 0) {
+            return;
+        }
+
+        const touch = event.touches[0];
+        trainTouchStartX = touch.clientX;
+        trainTouchStartY = touch.clientY;
+    }, { passive: true });
+
+    trainBoard.addEventListener("touchend", (event) => {
+        if (!isMobileControlMode() || !ethanPanel || ethanPanel.hidden || event.changedTouches.length === 0) {
+            return;
+        }
+
+        const touch = event.changedTouches[0];
+        const deltaX = touch.clientX - trainTouchStartX;
+        const deltaY = touch.clientY - trainTouchStartY;
+        const movement = Math.max(Math.abs(deltaX), Math.abs(deltaY));
+
+        if (movement < 18) {
+            return;
+        }
+
+        const directionKey = Math.abs(deltaX) > Math.abs(deltaY)
+            ? (deltaX > 0 ? "right" : "left")
+            : (deltaY > 0 ? "down" : "up");
+
+        if (!trainGameActive) {
+            if (startTrainBtn && startTrainBtn.textContent === "Resume Run") {
+                startTrainGame();
+            } else {
+                return;
+            }
+        }
+
+        updateTrainDirection(directionKey);
+    }, { passive: true });
+
     document.addEventListener("keydown", (event) => {
+        if (isMobileControlMode()) {
+            return;
+        }
+
         const keyToDirection = {
             ArrowUp: "up",
             ArrowDown: "down",
