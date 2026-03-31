@@ -1,4 +1,5 @@
 const menuToggle = document.getElementById("menuToggle");
+const themeToggle = document.getElementById("themeToggle");
 const navList = document.getElementById("navList");
 const revealItems = document.querySelectorAll(".reveal");
 const easterTargets = document.querySelectorAll("[data-easter]");
@@ -84,6 +85,7 @@ const availableModes = [...new Set(Array.from(easterTargets, (el) => el.dataset.
 
 let toastTimer;
 let factIndex = 0;
+const THEME_STORAGE_KEY = "site-theme";
 
 // Vermont Memory Game Data
 const vermontCards = [
@@ -1956,6 +1958,44 @@ function applyMode(mode) {
     });
 }
 
+function applyTheme(theme) {
+    const resolvedTheme = theme === "dark" ? "dark" : "light";
+    document.body.dataset.theme = resolvedTheme;
+
+    if (!themeToggle) {
+        return;
+    }
+
+    const isDark = resolvedTheme === "dark";
+    themeToggle.setAttribute("aria-pressed", String(isDark));
+    themeToggle.classList.toggle("is-dark", isDark);
+    const toggleLabel = isDark ? "Switch to light mode" : "Switch to dark mode";
+    themeToggle.setAttribute("aria-label", toggleLabel);
+    themeToggle.setAttribute("title", toggleLabel);
+}
+
+function getPreferredTheme() {
+    const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    if (storedTheme === "dark" || storedTheme === "light") {
+        return storedTheme;
+    }
+    return "light";
+}
+
+function initializeTheme() {
+    applyTheme(getPreferredTheme());
+
+    if (!themeToggle) {
+        return;
+    }
+
+    themeToggle.addEventListener("click", () => {
+        const nextTheme = document.body.dataset.theme === "dark" ? "light" : "dark";
+        applyTheme(nextTheme);
+        localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+    });
+}
+
 function setMapDetailsByPin(pin) {
     if (!pin) {
         return;
@@ -2005,6 +2045,7 @@ mapPins.forEach((pin) => {
 });
 
 initializeRandomMode();
+initializeTheme();
 initializeGameSwitcher();
 
 if (factButton && factOutput) {

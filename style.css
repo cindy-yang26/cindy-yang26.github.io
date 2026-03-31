@@ -59,6 +59,67 @@ body[data-mode="maple"] {
     --barn-red: #a6462f;
     --moss: #9a5b37;
 }
+body[data-theme="dark"] {
+    --wood-smoke: #ece9e4;
+    --ink: #dfdbd5;
+    --line: #595d63;
+    --paper: #30343a;
+    --dark-surface: rgba(60, 64, 71, 0.96);
+    --dark-elevated: rgba(63, 68, 75, 0.96);
+    --dark-control: rgba(66, 71, 78, 0.95);
+    --dark-accent: rgba(150, 150, 150, 0.22);
+    --dark-accent-ring: rgba(150, 150, 150, 0.18);
+    --dark-card-tint-a: rgba(133, 126, 118, 0.2);
+    --dark-card-tint-b: rgba(110, 115, 121, 0.16);
+    background:
+        radial-gradient(circle at 85% 12%, rgba(255, 255, 255, 0.1), transparent 34%),
+        radial-gradient(circle at 10% 80%, rgba(175, 172, 167, 0.13), transparent 36%),
+        linear-gradient(160deg, #2f3339 0%, #292d33 55%, #363a41 100%);
+}
+
+body[data-theme="dark"][data-mode="lake"] {
+    --maple-cream: #313b46;
+    --fog: #28333e;
+    --barn-red: #86a6bf;
+    --moss: #7895ac;
+    --dark-accent: rgba(126, 159, 186, 0.24);
+    --dark-accent-ring: rgba(126, 159, 186, 0.18);
+    --dark-card-tint-a: rgba(111, 143, 170, 0.2);
+    --dark-card-tint-b: rgba(91, 117, 140, 0.16);
+}
+
+body[data-theme="dark"][data-mode="bridge"] {
+    --maple-cream: #433930;
+    --fog: #372f28;
+    --barn-red: #b39a83;
+    --moss: #99836f;
+    --dark-accent: rgba(173, 147, 122, 0.24);
+    --dark-accent-ring: rgba(173, 147, 122, 0.18);
+    --dark-card-tint-a: rgba(155, 132, 111, 0.2);
+    --dark-card-tint-b: rgba(129, 109, 91, 0.16);
+}
+
+body[data-theme="dark"][data-mode="trail"] {
+    --maple-cream: #323c33;
+    --fog: #29322a;
+    --barn-red: #8fab90;
+    --moss: #7c957d;
+    --dark-accent: rgba(127, 153, 128, 0.24);
+    --dark-accent-ring: rgba(127, 153, 128, 0.18);
+    --dark-card-tint-a: rgba(112, 137, 112, 0.2);
+    --dark-card-tint-b: rgba(93, 113, 93, 0.16);
+}
+
+body[data-theme="dark"][data-mode="maple"] {
+    --maple-cream: #413730;
+    --fog: #362d27;
+    --barn-red: #ba9a79;
+    --moss: #9f8367;
+    --dark-accent: rgba(181, 152, 122, 0.24);
+    --dark-accent-ring: rgba(181, 152, 122, 0.18);
+    --dark-card-tint-a: rgba(164, 136, 109, 0.2);
+    --dark-card-tint-b: rgba(136, 113, 91, 0.16);
+}
 
 a {
     color: inherit;
@@ -132,6 +193,57 @@ a {
     font-family: "Manrope", sans-serif;
     font-weight: 700;
     padding: 0.45rem 0.9rem;
+}
+
+.theme-toggle {
+    align-items: center;
+    background: rgba(255, 251, 245, 0.72);
+    border: 1px solid rgba(47, 41, 36, 0.2);
+    border-radius: 999px;
+    color: var(--wood-smoke);
+    cursor: pointer;
+    display: inline-flex;
+    height: 2.2rem;
+    justify-content: center;
+    position: fixed;
+    right: 1.2rem;
+    top: 1.05rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    width: 2.2rem;
+    z-index: 35;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: var(--barn-red);
+    outline: none;
+    transform: translateY(-1px);
+}
+
+.theme-toggle-icon {
+    border-radius: 50%;
+    box-shadow: inset -0.24rem -0.18rem 0 0 currentColor;
+    display: inline-block;
+    height: 0.86rem;
+    width: 0.86rem;
+}
+
+.theme-toggle.is-dark .theme-toggle-icon {
+    background: currentColor;
+    box-shadow: 0 0 0 0.14rem rgba(255, 251, 240, 0.22);
+}
+
+body[data-theme="dark"] .theme-toggle {
+    background: rgba(31, 33, 37, 0.8);
+    border-color: rgba(229, 229, 229, 0.2);
+    color: rgba(243, 238, 229, 0.94);
+}
+
+body[data-theme="dark"] .theme-toggle:hover,
+body[data-theme="dark"] .theme-toggle:focus-visible {
+    background: rgba(42, 44, 49, 0.94);
+    border-color: var(--barn-red);
 }
 
 .nav-list {
@@ -2196,6 +2308,155 @@ h3 {
 .reveal.visible {
     opacity: 1;
     transform: translateY(0);
+}
+body[data-theme="dark"] .site-header::before,
+body[data-theme="dark"] .site-header::after {
+    opacity: 0.22;
+}
+
+body[data-theme="dark"] .nav {
+    background: var(--dark-elevated);
+    border-color: rgba(228, 236, 231, 0.16);
+}
+
+body[data-theme="dark"] .menu-toggle {
+    background: var(--barn-red);
+    color: #121717;
+}
+
+body[data-theme="dark"] .nav-list a:hover,
+body[data-theme="dark"] .nav-list a:focus-visible {
+    background: rgba(214, 214, 214, 0.12);
+}
+
+body[data-theme="dark"] .headshot,
+body[data-theme="dark"] .logo-rail,
+body[data-theme="dark"] .card,
+body[data-theme="dark"] .panel,
+body[data-theme="dark"] .game-panel-viewport,
+body[data-theme="dark"] .map-detail,
+body[data-theme="dark"] .fact-output,
+body[data-theme="dark"] .fact-chip,
+body[data-theme="dark"] .equation-display,
+body[data-theme="dark"] .math-stats,
+body[data-theme="dark"] .slots-header span,
+body[data-theme="dark"] .animal-round-indicator,
+body[data-theme="dark"] .maple-math-game,
+body[data-theme="dark"] .ben-jerrys-game,
+body[data-theme="dark"] .farmer-market-game,
+body[data-theme="dark"] .maple-racing-game,
+body[data-theme="dark"] .moose-deer-game,
+body[data-theme="dark"] .game-board {
+    background: var(--dark-surface);
+    border-color: rgba(228, 236, 231, 0.11);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+body[data-theme="dark"] .card::before,
+body[data-theme="dark"] .panel::before {
+    background-image: linear-gradient(125deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02) 48%, transparent 72%);
+}
+
+body[data-theme="dark"] .logo-rail img,
+body[data-theme="dark"] .role-head img {
+    background: var(--dark-elevated);
+    border-color: rgba(228, 236, 231, 0.2);
+}
+
+body[data-theme="dark"] .btn-secondary {
+    border-color: rgba(228, 236, 231, 0.3);
+    color: var(--ink);
+}
+
+body[data-theme="dark"] .btn-secondary:hover,
+body[data-theme="dark"] .btn-secondary:focus-visible {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+body[data-theme="dark"] .game-picker-toggle,
+body[data-theme="dark"] .game-switcher,
+body[data-theme="dark"] .game-nav-btn,
+body[data-theme="dark"] .game-tab,
+body[data-theme="dark"] .picker-count {
+    background: var(--dark-control);
+    border-color: rgba(228, 236, 231, 0.22);
+    color: var(--ink);
+}
+
+body[data-theme="dark"] .game-tab.active {
+    background: var(--dark-accent);
+    box-shadow: 0 0 0 2px var(--dark-accent-ring), inset 0 -1px 0 var(--dark-accent-ring);
+}
+
+body[data-theme="dark"] .vermont-map-canvas {
+    background: linear-gradient(180deg, rgba(58, 64, 72, 0.95), rgba(65, 69, 76, 0.95));
+}
+
+body[data-theme="dark"] .state-outline {
+    background: linear-gradient(165deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+    border-color: rgba(160, 168, 176, 0.6);
+}
+
+body[data-theme="dark"] .map-pin,
+body[data-theme="dark"] .easter-trigger,
+body[data-theme="dark"] .flavor-button,
+body[data-theme="dark"] .flavor-description-button,
+body[data-theme="dark"] .farmer-product,
+body[data-theme="dark"] .farmer-description,
+body[data-theme="dark"] .race-btn,
+body[data-theme="dark"] .animal-btn,
+body[data-theme="dark"] .grade-btn,
+body[data-theme="dark"] .game-card,
+body[data-theme="dark"] .math-input-group input {
+    background: var(--dark-control);
+    border-color: rgba(228, 236, 231, 0.24);
+    color: var(--ink);
+}
+
+body[data-theme="dark"] .card-back {
+    background: linear-gradient(135deg, var(--dark-card-tint-a), var(--dark-card-tint-b));
+    color: var(--ink);
+}
+
+body[data-theme="dark"] .game-card.flipped {
+    background: linear-gradient(135deg, var(--dark-card-tint-a), var(--dark-card-tint-b));
+}
+
+body[data-theme="dark"] .game-intro,
+body[data-theme="dark"] .map-copy,
+body[data-theme="dark"] .train-control-hint,
+body[data-theme="dark"] .picker-kicker,
+body[data-theme="dark"] .picker-action {
+    color: rgba(230, 223, 213, 0.82);
+}
+
+body[data-theme="dark"] .slots-machine {
+    background: linear-gradient(180deg, #2a2925 0%, #1f1f1b 100%);
+    border-color: rgba(246, 228, 199, 0.2);
+}
+
+body[data-theme="dark"] .slots-reels {
+    background: linear-gradient(180deg, #121414 0%, #1a1d1c 100%);
+}
+
+body[data-theme="dark"] .slot-reel {
+    background: linear-gradient(180deg, #3b3830 0%, #2b2a23 100%);
+}
+
+body[data-theme="dark"] .math-input-group input:disabled {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(228, 236, 231, 0.56);
+}
+
+body[data-theme="dark"] .site-footer {
+    border-top-color: rgba(228, 236, 231, 0.15);
+}
+
+@media (max-width: 860px) {
+    body[data-theme="dark"] .nav-list {
+        background: rgba(16, 23, 22, 0.98);
+        border-color: rgba(228, 236, 231, 0.2);
+    }
 }
 
 @media (max-width: 860px) {
