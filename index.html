@@ -23,6 +23,7 @@
                 <li><a href="#experience">Experience</a></li>
                 <li><a href="#education">Education</a></li>
                 <li><a href="#vermont">Vermont</a></li>
+                <li><a href="#careers">Careers</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
@@ -422,16 +423,107 @@
                 </div>
             </article>
         </section>
-    </main>
 
-    <section class="contact container reveal" id="contact">
-        <h2>Contact</h2>
-        <p>
-            I am based in San Francisco and always open to thoughtful conversations about product, AI, and education.
-            Reach out through LinkedIn to connect.
-        </p>
-        <a class="btn btn-secondary" href="https://www.linkedin.com/in/cindy-yang-884366227/" target="_blank" rel="noopener noreferrer">Message on LinkedIn</a>
-    </section>
+        <section class="careers container reveal" id="careers">
+            <h2>Careers</h2>
+            <p class="section-intro">
+                We are hiring interns to help build and scale this website. If you want to work on product polish,
+                infrastructure, AI features, hardware acceleration ideas, or Cava delivery reliability, apply below.
+            </p>
+
+            <article class="panel internship-experience">
+                <div class="internship-experience-copy">
+                    <h3>High-Performance Internship Program</h3>
+                    <p>
+                        This internship is designed with the intensity and support structure of top-tier engineering programs:
+                        deep ownership, real production impact, direct mentorship, and a cohort experience that builds long-term career momentum.
+                    </p>
+                    <div class="perk-grid" aria-label="Internship perks">
+                        <div class="perk-pill"><strong>High Compensation:</strong> top-band intern pay with performance bonus potential.</div>
+                        <div class="perk-pill"><strong>Housing Support:</strong> monthly housing stipend plus relocation assistance.</div>
+                        <div class="perk-pill"><strong>Offsites:</strong> team offsites in Tahoe, Napa, and NYC strategy week.</div>
+                        <div class="perk-pill"><strong>Mentorship:</strong> weekly 1:1s with senior engineers and product leaders.</div>
+                        <div class="perk-pill"><strong>Learning Budget:</strong> conference, books, and compute credits included.</div>
+                        <div class="perk-pill"><strong>Cohort Events:</strong> hack nights, founder dinners, and demo day.</div>
+                    </div>
+                </div>
+                <div class="experience-gallery" aria-label="Internship program photos">
+                    <figure class="experience-shot">
+                        <img src="https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Interns collaborating in a bright office" loading="lazy">
+                        <figcaption>Daily collaboration in small, high-ownership teams.</figcaption>
+                    </figure>
+                    <figure class="experience-shot">
+                        <img src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Engineers reviewing work on laptops in a working session" loading="lazy">
+                        <figcaption>Mentored execution from kickoff to production launch.</figcaption>
+                    </figure>
+                </div>
+            </article>
+
+            <div class="careers-layout">
+                <article class="panel careers-openings">
+                    <h3>Open Internship Positions</h3>
+                    <div class="internship-carousel" id="internshipCarousel" aria-live="polite">
+                        <h4 id="carouselRoleTitle">Frontend Engineering Intern</h4>
+                        <p class="carousel-compensation">
+                            <span>Compensation Level</span>
+                            <strong id="carouselCompensation">Level 4 - Competitive intern pay + meals stipend</strong>
+                        </p>
+                        <p id="carouselRoleDescription" class="carousel-description">
+                            Build and polish delightful user-facing features for this site, from responsive layout improvements to meaningful interactions.
+                        </p>
+                        <ul id="carouselHighlights" class="carousel-highlights">
+                            <li>Build reusable UI components</li>
+                            <li>Improve page performance and accessibility</li>
+                            <li>Ship polished mobile and desktop experiences</li>
+                        </ul>
+                        <div class="carousel-controls" aria-label="Internship carousel controls">
+                            <button class="carousel-btn" id="carouselPrev" type="button" aria-label="Previous internship">Previous</button>
+                            <div class="carousel-dots" id="carouselDots" role="tablist" aria-label="Select internship"></div>
+                            <button class="carousel-btn" id="carouselNext" type="button" aria-label="Next internship">Next</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="panel careers-apply-panel">
+                    <h3>Apply Now</h3>
+                    <form id="internshipForm" class="careers-form" action="https://formspree.io/f/mkopajvy" method="POST" novalidate>
+                        <label for="applicantName">Full name</label>
+                        <input id="applicantName" name="name" type="text" autocomplete="name" required>
+
+                        <label for="applicantEmail">Email</label>
+                        <input id="applicantEmail" name="email" type="email" autocomplete="email" required>
+
+                        <label for="applicantRole">Role</label>
+                        <select id="applicantRole" name="role" required>
+                            <option value="">Select an internship</option>
+                            <option>Frontend Engineering Intern</option>
+                            <option>Backend Engineering Intern</option>
+                            <option>LLM Engineering Intern</option>
+                            <option>FPGA Intern</option>
+                            <option>Cava Logistics Intern</option>
+                        </select>
+
+                        <label for="applicantPortfolio">Portfolio or resume link</label>
+                        <input id="applicantPortfolio" name="portfolio" type="url" placeholder="https://" inputmode="url">
+
+                        <label for="applicantNote">Why are you a strong fit?</label>
+                        <textarea id="applicantNote" name="note" rows="4" required></textarea>
+
+                        <button class="btn btn-primary" type="submit">Submit application</button>
+                    </form>
+                </article>
+            </div>
+        </section>
+
+        <section class="contact container reveal" id="contact">
+            <h2>Contact</h2>
+            <p>
+                I am based in San Francisco and always open to thoughtful conversations about product, AI, and education.
+                Reach out through LinkedIn to connect.
+            </p>
+            <a class="btn btn-secondary" href="https://www.linkedin.com/in/cindy-yang-884366227/" target="_blank" rel="noopener noreferrer">Message on LinkedIn</a>
+        </section>
+    </main>
 
     <footer class="site-footer">
         <p>
@@ -442,6 +534,18 @@
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <div id="motifLayer" class="motif-layer" aria-hidden="true"></div>
-    <script src="script.js"></script>
+    <script src="src/script.js"></script>
+    <script src="src/ui-core.js"></script>
+    <script src="src/games/memory.js"></script>
+    <script src="src/games/flavor.js"></script>
+    <script src="src/games/race.js"></script>
+    <script src="src/games/animal.js"></script>
+    <script src="src/games/math.js"></script>
+    <script src="src/games/ethan-express.js"></script>
+    <script src="src/games/slots.js"></script>
+    <script src="src/games/switcher.js"></script>
+    <script src="src/careers.js"></script>
+    <script src="src/vermont-ui.js"></script>
+    <script src="src/app-init.js"></script>
 </body>
 </html>
