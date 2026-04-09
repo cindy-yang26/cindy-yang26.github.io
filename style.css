@@ -116,6 +116,10 @@ body[data-theme="dark"] {
     --dark-accent-ring: rgba(150, 150, 150, 0.18);
     --dark-card-tint-a: rgba(133, 126, 118, 0.2);
     --dark-card-tint-b: rgba(110, 115, 121, 0.16);
+    --career-text: #e4ebf2;
+    --career-text-strong: #f2f6fa;
+    --career-border-rgb: 168, 179, 190;
+    --career-panel-rgb: 78, 84, 92;
     background:
         radial-gradient(circle at 85% 12%, rgba(255, 255, 255, 0.1), transparent 34%),
         radial-gradient(circle at 10% 80%, rgba(175, 172, 167, 0.13), transparent 36%),
@@ -450,23 +454,16 @@ h1 {
 }
 
 main {
-    margin: 0;
+    margin: 0 0 4rem 0;
     padding: 0;
 }
 
-.experience,
-.education,
-.craft,
-.careers,
-.contact {
+main > .container {
     margin-top: var(--section-space);
 }
 
-.contact {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.9rem;
+main :nth-child(1 of .container) {
+    margin-top: calc(0.5 * var(--section-space));
 }
 
 h2 {
@@ -474,23 +471,17 @@ h2 {
     margin-bottom: 1rem;
 }
 
-main > section > h2,
-.contact > h2 {
+main > section > h2 {
     padding-top: 0.95rem;
 }
 
-main > section > h2::before,
-.contact > h2::before {
+main > section > h2::before {
     content: "";
     display: block;
     height: 2px;
     margin-bottom: 0.78rem;
     width: min(180px, 38vw);
-    background: linear-gradient(90deg, rgba(138, 51, 40, 0.85), rgba(138, 51, 40, 0));
-}
-
-.careers > h2::before {
-    background: linear-gradient(90deg, rgba(var(--career-accent-rgb), 0.85), rgba(var(--career-accent-rgb), 0));
+    background: linear-gradient(90deg, var(--barn-red), transparent);
 }
 
 .grid-3,
@@ -2596,7 +2587,10 @@ h3 {
 }
 
 .contact {
-    margin-bottom: 4rem;
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
 }
 
 .site-footer {
@@ -2739,6 +2733,67 @@ body[data-theme="dark"] .math-input-group input {
     background: var(--dark-control);
     border-color: rgba(228, 236, 231, 0.24);
     color: var(--ink);
+}
+
+body[data-theme="dark"] .careers .section-intro,
+body[data-theme="dark"] .careers h3,
+body[data-theme="dark"] .careers-form label,
+body[data-theme="dark"] .carousel-description,
+body[data-theme="dark"] .perk-pill,
+body[data-theme="dark"] .experience-shot figcaption {
+    color: var(--career-text);
+}
+
+body[data-theme="dark"] .perk-pill,
+body[data-theme="dark"] .carousel-highlights li,
+body[data-theme="dark"] .experience-shot {
+    background: var(--dark-control);
+    border-color: rgba(var(--career-border-rgb), 0.45);
+}
+
+body[data-theme="dark"] .perk-pill strong,
+body[data-theme="dark"] .carousel-highlights li,
+body[data-theme="dark"] .carousel-description {
+    color: var(--ink);
+}
+
+body[data-theme="dark"] .carousel-btn,
+body[data-theme="dark"] .carousel-dot {
+    background: var(--dark-control);
+    border-color: rgba(var(--career-border-rgb), 0.5);
+    color: var(--ink);
+}
+
+body[data-theme="dark"] .carousel-btn:hover,
+body[data-theme="dark"] .carousel-btn:focus-visible {
+    border-color: var(--career-accent);
+    box-shadow: 0 0 0 3px rgba(var(--career-accent-rgb), 0.24);
+}
+
+body[data-theme="dark"] .carousel-dot.active {
+    background: var(--career-accent);
+    border-color: var(--career-accent);
+    color: #fff;
+}
+
+body[data-theme="dark"] .careers-form input,
+body[data-theme="dark"] .careers-form select,
+body[data-theme="dark"] .careers-form textarea {
+    background: var(--dark-control);
+    border-color: rgba(var(--career-border-rgb), 0.45);
+    color: var(--ink);
+}
+
+body[data-theme="dark"] .careers-form input::placeholder,
+body[data-theme="dark"] .careers-form textarea::placeholder {
+    color: rgba(228, 236, 231, 0.62);
+}
+
+body[data-theme="dark"] .careers-form input:focus-visible,
+body[data-theme="dark"] .careers-form select:focus-visible,
+body[data-theme="dark"] .careers-form textarea:focus-visible {
+    border-color: var(--career-accent);
+    box-shadow: 0 0 0 3px rgba(var(--career-accent-rgb), 0.28);
 }
 
 body[data-theme="dark"] .card-back {
