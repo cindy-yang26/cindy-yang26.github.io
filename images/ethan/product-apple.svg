@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Apple pickup">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd5c2"/>
+      <stop offset="1" stop-color="#cd5e3f"/>
+    </linearGradient>
+    <linearGradient id="apple" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ea5b3d"/>
+      <stop offset="1" stop-color="#a72b22"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="92" height="92" rx="18" fill="url(#tile)"/>
+  <path d="M50 24C54 17 63 14 68 17" stroke="#5c7f3a" stroke-width="4" stroke-linecap="round"/>
+  <ellipse cx="63" cy="19" rx="8" ry="4" transform="rotate(-18 63 19)" fill="#7aa44f"/>
+  <path d="M50 34C61 27 74 30 80 42C86 53 82 74 67 86C57 94 43 94 33 86C18 74 14 53 20 42C26 30 39 27 50 34Z" fill="url(#apple)" stroke="#87231d" stroke-width="2"/>
+  <ellipse cx="39" cy="49" rx="8" ry="12" fill="#ff9f84" opacity="0.5"/>
+</svg>

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Cheese pickup">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f7d56c"/>
+      <stop offset="1" stop-color="#dfb341"/>
+    </linearGradient>
+    <linearGradient id="cheeseFace" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd941"/>
+      <stop offset="1" stop-color="#efbe1a"/>
+    </linearGradient>
+    <linearGradient id="cheeseTop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff07d"/>
+      <stop offset="1" stop-color="#f6d43a"/>
+    </linearGradient>
+    <style>
+      .outline { stroke: #1f313a; stroke-width: 2.2; stroke-linejoin: round; stroke-linecap: round; }
+    </style>
+  </defs>
+
+  <rect x="4" y="4" width="92" height="92" rx="18" fill="url(#tile)"/>
+
+  <g transform="translate(3.5 -9.5)">
+    <!-- Main wedge body -->
+    <path class="outline" d="M16 74L18 57C22 56 25 53 25 49C25 45 22 42 18 41L29 35L72 35L79 40L76 71C72 72 69 75 69 79C69 83 72 86 76 87L75 92L14 95Z" fill="url(#cheeseFace)"/>
+
+    <!-- Top face -->
+    <path class="outline" d="M29 35L42 24L71 28L79 40L72 35Z" fill="url(#cheeseTop)"/>
+
+    <!-- Top seam -->
+    <path d="M29 35L72 35" stroke="#7f6918" stroke-width="1.6" opacity="0.55"/>
+
+    <!-- Cheese holes -->
+    <ellipse class="outline" cx="34" cy="57" rx="4.7" ry="5.7" fill="#f6c72d"/>
+    <ellipse class="outline" cx="48" cy="52" rx="3.1" ry="3.8" fill="#f8cd37"/>
+    <ellipse class="outline" cx="63" cy="58" rx="3.9" ry="4.9" fill="#f6c72d"/>
+    <ellipse class="outline" cx="46" cy="72" rx="6.2" ry="7.4" fill="#f2bf20"/>
+    <ellipse class="outline" cx="56" cy="74" rx="2.6" ry="3.2" fill="#f7cb33"/>
+    <ellipse class="outline" cx="40" cy="38.6" rx="5.2" ry="3.5" fill="#f7d84a"/>
+    <ellipse class="outline" cx="62" cy="37.8" rx="5.8" ry="3.8" fill="#f7d84a"/>
+
+    <!-- Small bite marks on edge -->
+    <circle cx="18" cy="49" r="3.2" fill="#ecf0f2" opacity="0.85"/>
+    <circle cx="76" cy="79" r="2.8" fill="#ecf0f2" opacity="0.85"/>
+
+    <!-- Gloss highlights -->
+    <ellipse cx="51" cy="68" rx="9" ry="6" fill="#ffffff" opacity="0.14"/>
+    <ellipse cx="63" cy="55" rx="5.5" ry="3.2" fill="#ffffff" opacity="0.16"/>
+  </g>
+</svg>

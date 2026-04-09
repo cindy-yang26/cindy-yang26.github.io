@@ -12,6 +12,9 @@
 </head>
 <body>
     <header class="site-header" id="top">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Switch to dark mode" title="Switch to dark mode">
+            <span class="theme-toggle-icon" aria-hidden="true"></span>
+        </button>
         <nav class="nav container" aria-label="Primary">
             <a class="brand" href="#top">Cindy Yang</a>
             <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="navList">Menu</button>
@@ -79,22 +82,22 @@
                     <div class="role-head">
                         <img src="images/logos/upennLogo.jpg" alt="University of Pennsylvania logo" loading="lazy">
                         <div>
-                            <p class="card-tag">Jan 2025 - May 2025 · Philadelphia, PA</p>
+                            <p class="card-tag">Jan 2022 - May 2025 · Philadelphia, PA</p>
                             <h3>Teaching Assistant · University of Pennsylvania</h3>
                         </div>
                     </div>
-                    <p>I supported CIS1600: Mathematical Foundations of Computer Science and CIS1921: Solving Hard Problems in Practice.</p>
+                    <p>I supported CIS 1600: Mathematical Foundations of Computer Science and CIS1921: Solving Hard Problems in Practice.</p>
                 </article>
 
                 <article class="timeline-item card">
                     <div class="role-head">
                         <img src="images/logos/upennLogo.jpg" alt="University of Pennsylvania logo" loading="lazy">
                         <div>
-                            <p class="card-tag">Jan 2022 - Dec 2024 · Philadelphia, PA</p>
-                            <h3>CIS1600 Head Teaching Assistant · University of Pennsylvania</h3>
+                            <p class="card-tag">Jan 2024 - Dec 2024 · Philadelphia, PA</p>
+                            <h3>CIS 1600 Head Teaching Assistant · University of Pennsylvania</h3>
                         </div>
                     </div>
-                    <p>I led instructional support for Mathematical Foundations of Computer Science (discrete math).</p>
+                    <p>I led instructional support for Mathematical Foundations of Computer Science (discrete math), working closely under Prof. Val Tannen and Prof. Rajiv Gandhi.</p>
                 </article>
 
                 <article class="timeline-item card">
@@ -204,6 +207,196 @@
                 </article>
             </div>
 
+            <article class="vermont-games panel" aria-labelledby="vermontGamesHeading">
+                <div class="vermont-games-header">
+                    <h3 id="vermontGamesHeading">Vermont Games</h3>
+                    <p class="game-intro">One game at a time to keep this section compact. Switch anytime.</p>
+                </div>
+
+                <div class="game-switcher-wrap">
+                    <div class="game-switcher-controls" aria-label="Vermont game picker">
+                        <button class="game-nav-btn" id="gamePrevBtn" type="button" aria-label="Previous game">&larr;</button>
+                        <button class="game-picker-toggle" id="gamePickerToggle" type="button" aria-expanded="false" aria-controls="gamePickerMenu">
+                            <span class="picker-kicker">Now Playing</span>
+                            <span class="picker-title" id="gamePickerCurrent">Memory</span>
+                            <span class="picker-count" id="gamePickerCount">1 / 7</span>
+                            <span class="picker-action">Show all</span>
+                        </button>
+                        <button class="game-nav-btn" id="gameNextBtn" type="button" aria-label="Next game">&rarr;</button>
+                    </div>
+
+                    <div class="game-switcher" id="gamePickerMenu" role="tablist" aria-label="Vermont games" hidden>
+                        <button class="game-tab active" id="gameTabMemory" data-game-target="memory" role="tab" aria-selected="true" aria-controls="gamePanelMemory" type="button">Memory</button>
+                        <button class="game-tab" id="gameTabFlavor" data-game-target="flavor" role="tab" aria-selected="false" aria-controls="gamePanelFlavor" type="button">B&amp;J Flavor Quiz</button>
+                        <button class="game-tab" id="gameTabRace" data-game-target="race" role="tab" aria-selected="false" aria-controls="gamePanelRace" type="button">Syrup Racing</button>
+                        <button class="game-tab" id="gameTabAnimal" data-game-target="animal" role="tab" aria-selected="false" aria-controls="gamePanelAnimal" type="button">Moose vs Deer</button>
+                        <button class="game-tab" id="gameTabMath" data-game-target="math" role="tab" aria-selected="false" aria-controls="gamePanelMath" type="button">Maple Math</button>
+                        <button class="game-tab" id="gameTabEthan" data-game-target="ethan" role="tab" aria-selected="false" aria-controls="gamePanelEthan" type="button">Ethan Allen Express</button>
+                        <button class="game-tab" id="gameTabSlots" data-game-target="slots" role="tab" aria-selected="false" aria-controls="gamePanelSlots" type="button">Green Mountain Slots</button>
+                    </div>
+                </div>
+
+                <div class="game-panel-viewport">
+                    <article class="game-panel active memory-game-panel" id="gamePanelMemory" data-game-panel="memory" role="tabpanel" aria-labelledby="gameTabMemory">
+                        <h4>Vermont Memory Game</h4>
+                        <p class="game-intro">Match pairs of Vermont landmarks and icons. How many can you find?</p>
+                        <div class="game-board" id="gameBoard"></div>
+                        <div class="game-stats">
+                            <span>Matches: <span id="matchCount">0</span>/6</span>
+                            <button class="btn btn-secondary btn-small" id="resetGameBtn" type="button">New Game</button>
+                        </div>
+                    </article>
+
+                    <article class="game-panel ben-jerrys-panel" id="gamePanelFlavor" data-game-panel="flavor" role="tabpanel" aria-labelledby="gameTabFlavor" hidden>
+                        <h4>Ben & Jerry's Flavor Quiz</h4>
+                        <p class="game-intro">Match iconic Ben & Jerry's flavors with their descriptions. How many do you know?</p>
+                        <div class="ben-jerrys-game">
+                            <div class="flavor-list" id="flavorList"></div>
+                            <div class="flavor-description-list" id="flavorDescriptionList"></div>
+                        </div>
+                        <div class="ben-jerrys-stats">
+                            <span>Flavors Matched: <span id="flavorMatchCount">0</span>/8</span>
+                            <button class="btn btn-secondary btn-small" id="resetFlavorBtn" type="button">New Quiz</button>
+                        </div>
+                    </article>
+
+                    <article class="game-panel maple-racing-panel" id="gamePanelRace" data-game-panel="race" role="tabpanel" aria-labelledby="gameTabRace" hidden>
+                        <h4>Maple Syrup Racing</h4>
+                        <p class="game-intro">Pick your maple syrup and watch them race! Who will finish first?</p>
+                        <div class="maple-racing-game">
+                            <div class="race-container">
+                                <div class="race-lane" id="lane1">
+                                    <div class="syrup-stream golden-stream"></div>
+                                    <span class="lane-label">Golden</span>
+                                </div>
+                                <div class="race-lane" id="lane2">
+                                    <div class="syrup-stream amber-stream"></div>
+                                    <span class="lane-label">Amber</span>
+                                </div>
+                                <div class="race-lane" id="lane3">
+                                    <div class="syrup-stream dark-stream"></div>
+                                    <span class="lane-label">Dark</span>
+                                </div>
+                                <div class="race-lane" id="lane4">
+                                    <div class="syrup-stream very-dark-stream"></div>
+                                    <span class="lane-label">Very Dark</span>
+                                </div>
+                            </div>
+                            <div class="racing-controls">
+                                <button class="race-btn" data-lane="1" type="button">Pick Golden 🍯</button>
+                                <button class="race-btn" data-lane="2" type="button">Pick Amber 🍯</button>
+                                <button class="race-btn" data-lane="3" type="button">Pick Dark 🍯</button>
+                                <button class="race-btn" data-lane="4" type="button">Pick Very Dark 🍯</button>
+                            </div>
+                        </div>
+                        <div class="race-footer">
+                            <div class="racing-result" id="racingResult"></div>
+                            <button class="btn btn-secondary btn-small" id="resetRaceBtn" type="button">Race Again</button>
+                        </div>
+                    </article>
+
+                    <article class="game-panel moose-deer-panel" id="gamePanelAnimal" data-game-panel="animal" role="tabpanel" aria-labelledby="gameTabAnimal" hidden>
+                        <h4>Moose vs Deer Rapid-Fire</h4>
+                        <p class="game-intro">What do you see? Click as fast as you can!</p>
+                        <div class="moose-deer-game">
+                            <div class="animal-display" id="animalDisplay">
+                                <div class="animal-round-indicator" id="animalRoundIndicator" aria-live="polite">Round 0</div>
+                                <img id="animalImage" src="" alt="Animal" class="animal-image">
+                                <button class="btn btn-secondary btn-small" id="startAnimalBtn" type="button">Start Game</button>
+                            </div>
+                            <div class="animal-buttons">
+                                <button class="animal-btn" id="mooseBtn" type="button">Moose</button>
+                                <button class="animal-btn" id="deerBtn" type="button">Deer</button>
+                            </div>
+                        </div>
+                        <div class="animal-stats">
+                            <span>Score: <span id="animalScore">0</span></span>
+                            <span>Lives: <span id="animalLives">3</span></span>
+                            <span>Streak: <span id="animalStreak">0</span></span>
+                            <span>Time: <span id="animalTimer">60</span>s</span>
+                        </div>
+                    </article>
+
+                    <article class="game-panel maple-math-panel" id="gamePanelMath" data-game-panel="math" role="tabpanel" aria-labelledby="gameTabMath" hidden>
+                        <h4>Maple Math Challenge</h4>
+                        <p class="game-intro">Vermont is known for its MathCounts team, which I was a member of. Test out your mental math with this fun game!</p>
+                        <div class="maple-math-game">
+                            <div class="equation-display" id="equationDisplay">
+                                <div class="equation-text" id="equationText" aria-live="polite"></div>
+                                <button class="btn btn-secondary btn-small" id="startMathBtn" type="button">Start Challenge</button>
+                            </div>
+                            <div class="math-input-group">
+                                <input type="number" id="mathAnswer" step="any">
+                            </div>
+                        </div>
+                        <div class="math-stats">
+                            <span>Score: <span id="mathScore">0</span></span>
+                            <span>Streak: <span id="mathStreak">0</span></span>
+                            <span>Time: <span class="math-time-value"><span id="mathTimer">45</span>s</span></span>
+                        </div>
+                    </article>
+
+                    <article class="game-panel ethan-express-panel" id="gamePanelEthan" data-game-panel="ethan" role="tabpanel" aria-labelledby="gameTabEthan" hidden>
+                        <h4>Ethan Allen Express Route Run</h4>
+                        <p class="game-intro">Guide the Ethan Allen Express across Vermont. Pick up local products and grow your train without crashing into yourself or the Vermont border.</p>
+                        <div class="ethan-express-game">
+                            <div class="ethan-express-board" id="trainBoard" role="img" aria-label="Vermont-themed map board for the Ethan Allen Express game">
+                                <button class="btn btn-secondary btn-small" id="startTrainBtn" type="button">Start Run</button>
+                            </div>
+                        </div>
+                        <div class="ethan-express-stats">
+                            <span>Stops made: <span id="trainScore">0</span></span>
+                            <span>Train length: <span id="trainLength">3</span></span>
+                            <span>Pickup: <span id="trainProduct">Syrup</span></span>
+                            <span id="trainControlHint" class="train-control-hint">Controls: Arrow keys or WASD</span>
+                        </div>
+                    </article>
+
+                    <article class="game-panel vermont-slots-panel" id="gamePanelSlots" data-game-panel="slots" role="tabpanel" aria-labelledby="gameTabSlots" hidden>
+                        <h4>Green Mountain Slots</h4>
+                        <p class="game-intro">Spin Vermont-themed reels, build streaks, and chase your best payout run. Click the red lever handle to spin.</p>
+                        <div class="slots-game">
+                            <div class="slots-machine" id="slotsMachine">
+                                <div class="slots-marquee" id="slotsStatus">Land 3 of a kind for a big Vermont payout.</div>
+                                <div class="slots-header">
+                                    <span>Credits: <strong id="slotsCredits">20</strong></span>
+                                    <span>Bet: <strong id="slotsBet">1</strong></span>
+                                    <span>Best Win: <strong id="slotsBestWin">0</strong></span>
+                                </div>
+
+                                <div class="slots-reels" id="slotsReels" aria-live="polite" aria-label="Slot machine reels">
+                                    <div class="slot-reel" id="slotReel1">🍁</div>
+                                    <div class="slot-reel" id="slotReel2">🍁</div>
+                                    <div class="slot-reel" id="slotReel3">🍁</div>
+                                    <div class="slots-bankrupt-screen" id="slotsBankruptScreen" hidden>
+                                        <p>Bankrupt. Hit Reset to play again.</p>
+                                    </div>
+                                </div>
+
+                                <div class="slots-controls">
+                                    <button class="btn btn-secondary btn-small" id="slotsBetDownBtn" type="button">Bet -</button>
+                                    <button class="btn btn-secondary btn-small" id="slotsBetUpBtn" type="button">Bet +</button>
+                                    <button class="btn btn-secondary btn-small" id="slotsResetBtn" type="button">Reset</button>
+                                </div>
+
+                                <button class="slots-crank" id="slotsSpinBtn" type="button" aria-label="Pull slot machine arm to spin">
+                                    <span class="slots-crank-lever" aria-hidden="true">
+                                        <span class="slots-crank-shaft"></span>
+                                        <span class="slots-crank-knob"></span>
+                                    </span>
+                                </button>
+                            </div>
+
+                            <div class="slots-footer">
+                                <span>Streak: <strong id="slotsStreak">0</strong></span>
+                                <span>Spins: <strong id="slotsSpinCount">0</strong></span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+            </article>
+
             <article class="panel fact-lab">
                 <h3>Fun Facts</h3>
                 <div class="fact-grid">
@@ -220,13 +413,15 @@
                 </div>
             </article>
 
-            <h3 class="mood-title">Mood Modes</h3>
-            <div class="egg-grid">
-                <button type="button" class="easter-trigger" data-mode="lake" data-easter="Lake Champlain sunrise mode enabled">Lake Champlain sunrise</button>
-                <button type="button" class="easter-trigger" data-mode="bridge" data-easter="Covered bridge timber mode enabled">Covered bridge timber</button>
-                <button type="button" class="easter-trigger" data-mode="trail" data-easter="Long Trail alpine mode enabled">Long Trail alpine</button>
-                <button type="button" class="easter-trigger" data-mode="maple" data-easter="Maple season mode enabled">Maple season</button>
-            </div>
+            <article class="panel mood-lab" aria-labelledby="moodModesHeading">
+                <h3 id="moodModesHeading">Mood Modes</h3>
+                <div class="egg-grid">
+                    <button type="button" class="easter-trigger" data-mode="lake" data-easter="Lake Champlain sunrise mode enabled">Lake Champlain sunrise</button>
+                    <button type="button" class="easter-trigger" data-mode="bridge" data-easter="Covered bridge timber mode enabled">Covered bridge timber</button>
+                    <button type="button" class="easter-trigger" data-mode="trail" data-easter="Long Trail alpine mode enabled">Long Trail alpine</button>
+                    <button type="button" class="easter-trigger" data-mode="maple" data-easter="Maple season mode enabled">Maple season</button>
+                </div>
+            </article>
         </section>
 
         <section class="careers container reveal" id="careers">
