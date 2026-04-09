@@ -68,9 +68,6 @@ function showNextAnimal() {
         void animalDisplay.offsetWidth;
         animalDisplay.classList.add("new-round");
     }
-    console.log("Showing animal:", currentAnimal);
-    console.log("Image element:", animalImage);
-    console.log("Setting src to:", currentAnimal.image);
     animalImage.src = currentAnimal.image;
     animalImage.alt = currentAnimal.label;
 }
