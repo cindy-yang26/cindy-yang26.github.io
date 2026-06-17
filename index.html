@@ -219,7 +219,7 @@
                         <button class="game-picker-toggle" id="gamePickerToggle" type="button" aria-expanded="false" aria-controls="gamePickerMenu">
                             <span class="picker-kicker">Now Playing</span>
                             <span class="picker-title" id="gamePickerCurrent">Memory</span>
-                            <span class="picker-count" id="gamePickerCount">1 / 7</span>
+                            <span class="picker-count" id="gamePickerCount">1 / 8</span>
                             <span class="picker-action">Show all</span>
                         </button>
                         <button class="game-nav-btn" id="gameNextBtn" type="button" aria-label="Next game">&rarr;</button>
@@ -233,6 +233,7 @@
                         <button class="game-tab" id="gameTabMath" data-game-target="math" role="tab" aria-selected="false" aria-controls="gamePanelMath" type="button">Maple Math</button>
                         <button class="game-tab" id="gameTabEthan" data-game-target="ethan" role="tab" aria-selected="false" aria-controls="gamePanelEthan" type="button">Ethan Allen Express</button>
                         <button class="game-tab" id="gameTabSlots" data-game-target="slots" role="tab" aria-selected="false" aria-controls="gamePanelSlots" type="button">Green Mountain Slots</button>
+                        <button class="game-tab" id="gameTabPong" data-game-target="pong" role="tab" aria-selected="false" aria-controls="gamePanelPong" type="button">Bernie Pong</button>
                     </div>
                 </div>
 
@@ -393,6 +394,23 @@
                             </div>
                         </div>
                     </article>
+
+                    <article class="game-panel bernie-pong-panel" id="gamePanelPong" data-game-panel="pong" role="tabpanel" aria-labelledby="gameTabPong" hidden>
+                        <h4>Bernie Pong</h4>
+                        <p class="game-intro">Keep the rally alive with Bernie Sanders' face as the ball. First to 7 wins the crowd.</p>
+                        <div class="bernie-pong-game">
+                            <canvas class="pong-court" id="pongCanvas" aria-label="Bernie Sanders themed pong court"></canvas>
+                            <div class="pong-controls">
+                                <button class="btn btn-secondary btn-small" id="pongResetBtn" type="button">Reset</button>
+                                <p class="pong-status" id="pongStatus">Click the game window to start.</p>
+                            </div>
+                        </div>
+                        <div class="pong-stats">
+                            <span>Bernie: <strong id="pongPlayerScore">0</strong></span>
+                            <span>Best Rally: <strong id="pongBestRally">0</strong></span>
+                            <span>Wall Street: <strong id="pongCpuScore">0</strong></span>
+                        </div>
+                    </article>
                 </div>
 
             </article>
@@ -543,6 +561,7 @@
     <script src="src/games/math.js"></script>
     <script src="src/games/ethan-express.js"></script>
     <script src="src/games/slots.js"></script>
+    <script src="src/games/pong.js"></script>
     <script src="src/games/switcher.js"></script>
     <script src="src/careers.js"></script>
     <script src="src/vermont-ui.js"></script>
