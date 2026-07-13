@@ -9,3 +9,4 @@ initializeGame();
 initializeFlavorGame();
 initializeTrainGame();
 initializeSlotsGame();
+initializePongGame();
